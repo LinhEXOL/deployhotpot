@@ -26,6 +26,6 @@ export const createClient = (api_root: string, apiConfig = {}) => {
 
 export const nextClient = createClient("");
 
-export const testClient = createClient("/");
+export const testClient = createClient("/api");
 
-export const client = createClient("/");
+export const client = createClient("/api");
