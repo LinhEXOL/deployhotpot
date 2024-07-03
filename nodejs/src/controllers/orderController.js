@@ -62,9 +62,7 @@ const chooseTableHandler = async (req, res) => {
 };
 const handleGetAllOrdersByRestaurantId = async (req, res) => {
   try {
-    let data = await orderService.getAllOrdersByRestaurantId(
-      req.body
-    );
+    let data = await orderService.getAllOrdersByRestaurantId(req.body);
     return res.json(data);
   } catch (e) {
     console.log(e);
@@ -92,7 +90,7 @@ const handleUpdateStatusOrder = async (req, res) => {
 let handleGetDetailOrderByOrderId = async (req, res) => {
   try {
     let data = await orderService.getDetailOrderByOrderId(req.body);
-    return res.status(data.status).json(data);
+    return res.json(data);
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -115,9 +113,26 @@ const handleGetAllOrderByCustomerPhoneNumber = async (req, res) => {
     });
   }
 };
-const handleUpdateOrder = async (req, res) => {
+
+const handleGetAllOrderByCustomerId = async (req, res) => {
   try {
-    let data = await orderService.updateOrder(req.body);
+    let data = await orderService.getAllOrdersByCustomerId(req.body);
+
+    return res.status(data.status).json(data);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      status: 500,
+      message: "Error from server...",
+    });
+  }
+};
+
+const handleUpdateOrder = async (req, res, io) => {
+  try {
+    let data = await orderService.newUpdateOrder(req.body);
+    if (data.status === 200) io.emit("update-order", "success");
+    else io.emit("update-order", "fail");
     return res.status(data.status).json(data);
   } catch (e) {
     console.log(e);
@@ -139,8 +154,23 @@ const handleUpdateOrderItem = async (req, res) => {
       message: "Error from server...",
     });
   }
+};
 
-}
+const handleCheckoutOrder = async (req, res, io) => {
+  try {
+    let data = await orderService.checkoutOrder(req.body);
+    if (data.status === 200) io.emit("checkout-order", "success");
+    else io.emit("checkout-order", "fail");
+    return res.status(data.status).json(data);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      status: 500,
+      message: "Error from server...",
+    });
+  }
+};
+
 module.exports = {
   handleGetAllOrders,
   registerHandler,
@@ -153,4 +183,6 @@ module.exports = {
   handleGetDetailOrderByOrderId,
   handleUpdateOrder,
   handleUpdateOrderItem,
+  handleGetAllOrderByCustomerId,
+  handleCheckoutOrder,
 };

@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "id",
       });
       Dish.belongsTo(models.OrderItem, { foreignKey: "id" });
+      Dish.belongsToMany(models.Combo, {
+        through: "ComboDish",
+        foreignKey: "dishId",
+        otherKey: "comboId",
+      });
     }
   }
   Dish.init(
@@ -29,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DOUBLE,
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT("long"),
       },
       categoryId: {
         type: DataTypes.INTEGER,

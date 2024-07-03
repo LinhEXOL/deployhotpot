@@ -5,6 +5,7 @@ const orderDAO = require("../DAOs/orderDAO");
 const tableDAO = require("../DAOs/tableDao");
 let handleGetAllTables = async (req, res) => {
   let data = await tableService.getAllTables();
+
   return res.status(200).json({
     status: 200,
     message: "OK",
@@ -12,12 +13,15 @@ let handleGetAllTables = async (req, res) => {
   });
 };
 
-let handleCreateNewTable = async (req, res) => {
+let handleCreateNewTable = async (req, res, io) => {
   let data = await tableService.createNewTable(req.body);
+  if (data.status === 201) {
+    io.emit("new-table", "success");
+  }
   return res.json(data);
 };
 
-let handleDeleteTable = async (req, res) => {
+let handleDeleteTable = async (req, res, io) => {
   if (!req.body.id) {
     return res.status(400).json({
       status: 400,
@@ -25,8 +29,11 @@ let handleDeleteTable = async (req, res) => {
       data: "",
     });
   }
-  let data = await tableService.deleteTable(req.body.id);
-  return res.status(data.status).json(data);
+  let data = await tableService.deleteTable(req.body);
+  if (data.status === 200) {
+    io.emit("delete-table", "success");
+  }
+  return res.json(data);
 };
 
 let handleEditTable = async (req, res) => {
@@ -48,14 +55,19 @@ let handleGetDetailTableById = async (req, res) => {
   }
 };
 
-const freeTableHandler = async (req, res) => {
-  const tableId = req.body.id;
-  const info = await tableService.freeTable({ orderDAO, tableDAO }, tableId);
-  return res.status(200).json({
-    success: true,
-    message: "Successfully freed the chosen table!",
-    item: info,
-  });
+const freeTableHandler = async (req, res, io) => {
+  if (!req.body.orderId) {
+    return res.status(400).json({
+      status: 400,
+      message: "Missing required parameter",
+      data: "",
+    });
+  }
+  const data = await tableService.freeTable(req.body);
+  if (data.status === 200) {
+    io.emit("free-table", "success");
+  }
+  return res.json(data);
 };
 
 const handleSearchTable = async (req, res) => {
@@ -72,11 +84,9 @@ const handleSearchTable = async (req, res) => {
   }
 };
 
-const handleGetAllTableByRestaurantId = async (req, res) => {
+const handleGetAllTableByRestaurantId = async (req, res, io) => {
   try {
-    let info = await tableService.getAllTablesByRestaurantId(
-      req.body
-    );
+    let info = await tableService.getAllTablesByRestaurantId(req.body);
     return res.status(200).json(info);
   } catch (e) {
     console.log("Get all code error:", e);

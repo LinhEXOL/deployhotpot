@@ -1,5 +1,6 @@
 import staffService from "../services/staffService";
 import orderService from "../services/orderService";
+import tableService from "../services/tableService";
 let handleGetListCustomerForStaff = async (req, res) => {
   try {
     let info = await staffService.getListCustomerForStaff(
@@ -32,7 +33,7 @@ let handleGetRestaurantByStaffId = async (req, res) => {
 const createOrder = async (req, res) => {
   try {
     let data = await orderService.createOrderByStaff(req.body);
-    return res.status(data.status).json(data);
+    return res.json(data);
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -43,8 +44,29 @@ const createOrder = async (req, res) => {
   }
 };
 
+const handleUpdateTable = async (req, res, io) => {
+  try {
+    let data = await tableService.updateTableData(req.body);
+    if (data.status === 200) {
+      io.emit("update-table", {
+        message: "success",
+        table: data.table,
+      });
+    }
+    return res.json(data);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      status: 500,
+      message: "Error from server...",
+      data: "",
+    });
+  }
+}
+
 module.exports = {
   handleGetListCustomerForStaff,
   handleGetRestaurantByStaffId,
-  createOrder
+  createOrder,
+  handleUpdateTable,
 };

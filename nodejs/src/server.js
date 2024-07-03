@@ -7,6 +7,13 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 
+const {
+  updateOrderStatus,
+  updateTable,
+} = require("./controllers/updateController");
+
+var cron = require("node-cron");
+
 require("dotenv").config(); // giup chayj dc dong process.env
 
 let app = express();
@@ -25,10 +32,10 @@ let server = http.createServer(app);
 // Create a Socket.IO server and attach it to the HTTP server
 let io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-  }
+    credentials: false,
+  },
 });
 
 viewEngine(app);
@@ -36,6 +43,14 @@ initWebRoutes(app, io);
 
 connectDB();
 
+// 0 */5 * * * *  5 phút 1 lần
+
+cron.schedule(" 0 59 23 * * *", async () => {
+  console.log("Running a task update order status ...");
+  await updateOrderStatus();
+  console.log("Running a task update table ...");
+  await updateTable();
+});
 
 // Use the HTTP server to listen for requests instead of the Express app
 server.listen(port, () => {

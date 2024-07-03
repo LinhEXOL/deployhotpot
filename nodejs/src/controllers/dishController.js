@@ -34,9 +34,10 @@ let handleGetAllDishRestaurantNames = async (req, res) => {
   }
 };
 
-let handleCreateNewDish = async (req, res) => {
+let handleCreateNewDish = async (req, res, io) => {
   let data = await dishService.createNewDish(req.body);
-  return res.status(data.status).json(data);
+  if(data.status === 201) io.emit("update-dish-list", "success");
+  return res.json(data);
 };
 
 let handleGetDetailDishById = async (req, res) => {
@@ -53,7 +54,7 @@ let handleGetDetailDishById = async (req, res) => {
   }
 };
 
-let handleDeleteDish = async (req, res) => {
+let handleDeleteDish = async (req, res, io) => {
   if (!req.body.id) {
     return res.status(400).json({
       status: 400,
@@ -62,12 +63,14 @@ let handleDeleteDish = async (req, res) => {
     });
   }
   let data = await dishService.deleteDish(req.body.id);
-  return res.status(data.status).json(data);
+  if(data.status === 200) io.emit("update-dish-list", "success");
+  return res.json(data);
 };
 
-let handleEditDish = async (req, res) => {
+let handleEditDish = async (req, res, io) => {
   let data = await dishService.updateDishData(req.body);
-  return res.status(data.status).json(data);
+  if(data.status === 200) io.emit("update-dish-list", "success");
+  return res.json(data);
 };
 module.exports = {
   handleGetAllDishes,

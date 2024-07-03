@@ -1,5 +1,4 @@
 import db from "../models/index";
-
 let bookTable = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -10,7 +9,14 @@ let bookTable = (data) => {
         !data.restaurantId ||
         !data.fullName ||
         !data.phoneNumber ||
-        !data.email
+        !data.email ||
+        data.resTime === "" ||
+        data.resDate === "" ||
+        data.people === "" ||
+        data.restaurantId === "" ||
+        data.fullName === "" ||
+        data.phoneNumber === "" ||
+        data.email === ""
       ) {
         resolve({
           status: 400,
@@ -29,6 +35,7 @@ let bookTable = (data) => {
         depositAmount: 0,
         restaurantId: data.restaurantId,
         email: data.email,
+        cusId: data.id ?? null,
       });
 
       let totalDepositAmount = 0;
@@ -52,7 +59,6 @@ let bookTable = (data) => {
       order.depositAmount = totalDepositAmount;
       order.totalAmount = totalDepositAmount/0.3;
       await order.save();
-
       resolve({
         status: 201,
         message: "Book table successfully!",

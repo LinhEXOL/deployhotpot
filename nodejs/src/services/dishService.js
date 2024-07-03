@@ -87,7 +87,7 @@ let createNewDish = (data) => {
         price: data.price,
         categoryId: data.categoryId,
         description: data.description,
-        image: data.imageBase64,
+        image: data.image,
       });
       resolve({
         status: 201,
@@ -161,7 +161,7 @@ let deleteDish = (dishId) => {
         });
       }
       await db.Dish.destroy({ where: { id: dishId } });
-      resolve({
+      return resolve({
         status: 200,
         message: "dish is deleted",
         data: "",
@@ -190,14 +190,15 @@ let updateDishData = (data) => {
         dish.description = data.description;
         dish.price = data.price;
         dish.image = data.image;
+        dish.categoryId = data.categoryId;
         await dish.save();
-        resolve({
+        return resolve({
           status: 200,
           message: "Update the dish succeeds!",
           data: dish,
         });
       } else {
-        resolve({
+        return resolve({
           status: 404,
           message: "dish is not exist",
           data: "",

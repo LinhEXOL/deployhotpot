@@ -18,7 +18,7 @@ let handleBookTable = async (req, res, io) => {
   try {
     let data = await customerService.bookTable(req.body);
     if(data.status === 201) io.emit("update-order-list", data.data);
-    return res.status(data.status).json(data);
+    return res.json(data);
   } catch (e) {
     console.log(e);
     return res.status(500).json({

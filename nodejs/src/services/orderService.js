@@ -1,8 +1,9 @@
 const table = require("../models/table");
 const dateTimeValidator = require("../utils/dateAndTimeValidator");
-const { fn, col } = db.sequelize;
-import { raw } from "body-parser";
 import db from "../models/index";
+import mailer from "./mailService";
+const invoiceService = require("../services/invoiceService");
+
 const getAllOrders = async (orderDAO) => {
   return await orderDAO.findAllOrders();
 };
@@ -15,21 +16,6 @@ const validateTime = (currDate, resDate, resTime) => {
         message: "ERROR: Given time is in the past!",
       };
     }
-  }
-};
-
-const checkClosingOpeningTime = (resTime) => {
-  if (resTime > "23:00:59") {
-    throw {
-      status: 400,
-      message:
-        "Order must be made at least an hour before closing time (12:00 AM)",
-    };
-  } else if (resTime < "11:00:59") {
-    throw {
-      status: 400,
-      message: "You can't make order before opening time! (11:00 AM)",
-    };
   }
 };
 
@@ -262,11 +248,9 @@ const createOrderByStaff = (data) => {
         !data.resDate ||
         !data.people ||
         !data.restaurantId ||
-        !data.fullName ||
-        !data.phoneNumber ||
         !data.tables
       ) {
-        resolve({
+        return resolve({
           status: 400,
           message: "Missing required parameter",
           data: "",
@@ -301,8 +285,9 @@ const createOrderByStaff = (data) => {
           note: item.note,
         });
       }
-      order.depositAmount = totalDepositAmount;
+      order.depositAmount = 0;
       order.totalAmount = totalDepositAmount / 0.3;
+      order.resStatus = "seated";
       await order.save();
       for (let table of data.tables) {
         await db.Table.update(
@@ -314,7 +299,7 @@ const createOrderByStaff = (data) => {
           }
         );
       }
-      resolve({
+      return resolve({
         status: 201,
         message: "Create order successfully",
         data: order,
@@ -389,11 +374,36 @@ const getAllOrdersByCustomerPhoneNumber = (data) => {
   });
 };
 
+const getAllOrdersByCustomerId = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id) {
+        resolve({
+          status: 400,
+          message: "Missing required parameter",
+          data: "",
+        });
+      }
+      let orders = await db.Order.findAll({
+        where: { cusId: data.id },
+      });
+
+      resolve({
+        status: 200,
+        message: "OK",
+        data: orders,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 let getDetailOrderByOrderId = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!data.orderId) {
-        resolve({
+        return resolve({
           status: 400,
           message: "Missing required parameter!",
           data: "",
@@ -404,7 +414,7 @@ let getDetailOrderByOrderId = (data) => {
       });
 
       if (!order) {
-        resolve({
+        return resolve({
           status: 404,
           message: "Order is not exist",
           data: "",
@@ -424,7 +434,7 @@ let getDetailOrderByOrderId = (data) => {
       // }
       let tables = await db.Table.findAll({
         where: { orderId: order.id },
-        attributes: ["name"],
+        attributes: ["id", "name", "capacity", "position", "description"],
       });
 
       let orderItems = await db.OrderItem.findAll({
@@ -451,7 +461,7 @@ let getDetailOrderByOrderId = (data) => {
       // if (!user) {
       //   user = "Guest"
       // }
-      resolve({
+      return resolve({
         status: 200,
         message: "Get detail order successfully",
         data: [
@@ -557,6 +567,133 @@ const updateOrderItem = (data) => {
   });
 };
 
+const newUpdateOrder = (data) => {
+  return new Promise(async (resolve, reject) => {
+    console.log("🚀 ~ newUpdateOrder ~ data:", data);
+    try {
+      if (!data.orderId) {
+        resolve({
+          status: 400,
+          message: "Missing required parameter",
+          data: "",
+        });
+        return;
+      }
+      let order = await db.Order.findOne({
+        where: { id: data.orderId },
+        raw: false,
+      });
+
+      if (!order) {
+        resolve({
+          status: 404,
+          message: "Order is not exist",
+          data: "",
+        });
+        return;
+      }
+      if (data.orderStatus) {
+        let preStatus = order.resStatus;
+        order.resStatus = data.orderStatus;
+        await order.save();
+        if (preStatus === "pending" && data.orderStatus === "confirmed") {
+          await mailer.notifyOrderPlaceSuccess(order);
+        }
+        if (data.orderStatus === "canceled") {
+          await mailer.notifyOrderCanceled(order);
+        }
+      }
+      if (data.newOrderItems) {
+        let totalAmount = 0;
+        await db.OrderItem.destroy({
+          where: {
+            orderId: data.orderId,
+          },
+        });
+        for (let item of data.newOrderItems) {
+          totalAmount += item.total;
+          await db.OrderItem.create({
+            orderId: data.orderId,
+            dishId: item.dishId,
+            quantity: item.quantity,
+            price: item.total,
+          });
+        }
+        order.totalAmount = totalAmount;
+        await order.save();
+      }
+      if (data.newTables) {
+        await db.Table.update(
+          { orderId: 0 },
+          {
+            where: {
+              orderId: order.id,
+            },
+          }
+        );
+        for (let table of data.newTables) {
+          await db.Table.update(
+            { orderId: order.id },
+            {
+              where: {
+                id: table.id,
+              },
+            }
+          );
+        }
+      }
+      resolve({
+        status: 200,
+        message: "Update order status success!",
+        data: order,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const checkoutOrder = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (
+        !data.orderId ||
+        !data.receivedMoney ||
+        data.orderId === "" ||
+        data.receivedMoney === ""
+      )
+        resolve({
+          status: 400,
+          message: "Missing required parameter",
+        });
+      let order = await db.Order.findOne({
+        where: { id: data.orderId },
+        raw: false,
+      });
+      if (!order) {
+        resolve({
+          status: 404,
+          message: "Order is not exist",
+          data: "",
+        });
+        return;
+      }
+      let subAmount = order.totalAmount - order.depositAmount;
+      let change = data.receivedMoney - subAmount;
+      return resolve({
+        status: 200,
+        message: "Checkout successful",
+        data: {
+          subAmount,
+          change,
+        },
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   getAllOrders,
   registerOrder,
@@ -569,5 +706,8 @@ module.exports = {
   getDetailOrderByOrderId,
   updateOrder,
   updateOrderItem,
+  newUpdateOrder,
   createOrderByStaff,
+  getAllOrdersByCustomerId,
+  checkoutOrder,
 };

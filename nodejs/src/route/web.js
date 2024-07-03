@@ -9,6 +9,10 @@ import staffController from "../controllers/staffController";
 import tableController from "../controllers/tableController";
 import orderController from "../controllers/orderController";
 import paymentController from "../controllers/paymentController";
+import categoryController from "../controllers/categoryController";
+import comboController from "../controllers/comboController";
+import adminController from "../controllers/adminController";
+import invoiceController from "../controllers/invoiceController";
 
 let router = express.Router();
 
@@ -27,9 +31,15 @@ let initWebRoutes = (app, io) => {
   router.post("/api/login", userController.handleLogin);
   router.post("/api/register", userController.handleRegister);
   router.post("/api/create-new-user", userController.handleCreateNewUser);
-  router.post("/api/create-new-staff", userController.handleCreateNewStaff);
-  router.put("/api/edit-user", userController.handleEditUser);
-  router.delete("/api/delete-user", userController.handleDeleteUser);
+  router.post("/api/create-new-staff", (req, res) =>
+    userController.handleCreateNewStaff(req, res, io)
+  );
+  router.post("/api/edit-user", (req, res) =>
+    userController.handleEditUser(req, res, io)
+  );
+  router.post("/api/delete-user", (req, res) =>
+    userController.handleDeleteUser(req, res, io)
+  );
   router.get(
     "/api/get-detail-user-by-id",
     userController.handleGetDetailUserById
@@ -40,21 +50,25 @@ let initWebRoutes = (app, io) => {
     tableController.handleGetDetailTableById
   );
 
-  router.post("/api/create-new-table", tableController.handleCreateNewTable);
+  router.post("/api/create-new-table", (req, res) =>
+    tableController.handleCreateNewTable(req, res, io)
+  );
   router.post("/api/edit-table", tableController.handleEditTable);
-  router.delete("/api/delete-table", tableController.handleDeleteTable);
+  router.post("/api/delete-table", (req, res) =>
+    tableController.handleDeleteTable(req, res, io)
+  );
 
   router.get("/api/get-all-tables", tableController.handleGetAllTables);
 
   router.get("/api/get-all-users", userController.handleGetAllUsers);
-  router.post(
-    "/api/create-new-restaurant",
-    restaurantController.handleCreateNewRestaurant
+  router.post("/api/create-new-restaurant", (req, res) =>
+    restaurantController.handleCreateNewRestaurant(req, res, io)
   );
-  router.put("/api/edit-restaurant", restaurantController.handleEditRestaurant);
-  router.delete(
-    "/api/delete-restaurant",
-    restaurantController.handleDeleteRestaurant
+  router.post("/api/edit-restaurant", (req, res) =>
+    restaurantController.handleEditRestaurant(req, res, io)
+  );
+  router.post("/api/delete-restaurant", (req, res) =>
+    restaurantController.handleDeleteRestaurant(req, res, io)
   );
 
   router.get(
@@ -79,7 +93,9 @@ let initWebRoutes = (app, io) => {
     restaurantController.handleGetAllRestaurants
   );
 
-  router.post("/api/book-table", (req, res) => customerController.handleBookTable(req, res, io));
+  router.post("/api/book-table", (req, res) =>
+    customerController.handleBookTable(req, res, io)
+  );
   router.post(
     "/api/create-new-orderItem",
     customerController.handleCreateNewOrderItem
@@ -90,9 +106,15 @@ let initWebRoutes = (app, io) => {
   );
 
   router.get("/api/get-all-dishes", dishController.handleGetAllDishes);
-  router.post("/api/create-new-dish", dishController.handleCreateNewDish);
-  router.put("/api/edit-dish", dishController.handleEditDish);
-  router.delete("/api/delete-dish", dishController.handleDeleteDish);
+  router.post("/api/create-new-dish", (req, res) =>
+    dishController.handleCreateNewDish(req, res, io)
+  );
+  router.post("/api/edit-dish", (req, res) =>
+    dishController.handleEditDish(req, res, io)
+  );
+  router.post("/api/delete-dish", (req, res) =>
+    dishController.handleDeleteDish(req, res, io)
+  );
   router.get(
     "/api/get-detail-dish-by-id",
     dishController.handleGetDetailDishById
@@ -101,6 +123,26 @@ let initWebRoutes = (app, io) => {
   router.get(
     "/api/get-all-dishRestaurant-names",
     dishController.handleGetAllDishRestaurantNames
+  );
+
+  router.get("/api/get-all-combos", comboController.handleGetAllCombos);
+  router.post("/api/create-new-combo", comboController.handleCreateCombo);
+  router.delete("/api/delete-combo", comboController.handleDeleteCombo);
+  router.put("/api/edit-combo", comboController.handleEditCombo);
+
+  router.post(
+    "/api/get-all-categories",
+    categoryController.handleGetAllCategories
+  );
+  router.post(
+    "/api/create-new-category",
+    categoryController.handleCreateNewCategory
+  );
+  router.post("/api/edit-category", (req, res) =>
+    categoryController.handleEditCategory(req, res, io)
+  );
+  router.post("/api/delete-category", (req, res) =>
+    categoryController.handleDeleteCategory(req, res, io)
   );
 
   router.get(
@@ -113,11 +155,17 @@ let initWebRoutes = (app, io) => {
     staffController.handleGetRestaurantByStaffId
   );
 
+  router.post("/api/update-table", (req, res) =>
+    staffController.handleUpdateTable(req, res, io)
+  );
+
   router.get("/api/get-all-orders", orderController.handleGetAllOrders);
   router.put("/api/edit-order", orderController.editHandler);
   router.delete("api/delete-order", orderController.cancelHandler);
   router.post("/api/choose-table", orderController.chooseTableHandler);
-  router.patch("/api/free-table", tableController.freeTableHandler);
+  router.post("/api/free-table", (req, res) =>
+    tableController.freeTableHandler(req, res, io)
+  );
   router.post("/api/search-table", tableController.handleSearchTable);
 
   router.post(
@@ -145,13 +193,39 @@ let initWebRoutes = (app, io) => {
     orderController.handleGetDetailOrderByOrderId
   );
 
-  router.post("/api/update-order", orderController.handleUpdateOrder);
+  router.post("/api/update-order", (req, res) =>
+    orderController.handleUpdateOrder(req, res, io)
+  );
   router.post("/api/update-order-item", orderController.handleUpdateOrderItem);
-  router.post("/api/get-available-tables", tableController.handleGetAvailableTables);
-  router.post("/api/get-all-tables-by-restaurantId", tableController.handleGetAllTableByRestaurantId);
+
+  router.post("/api/checkout-order", (req, res) =>
+    orderController.handleCheckoutOrder(req, res, io)
+  );
+
+  router.post("/api/create-invoice", (req, res) =>
+    invoiceController.handleCreateInvoice(req, res, io)
+  );
+
+  router.post(
+    "/api/get-available-tables",
+    tableController.handleGetAvailableTables
+  );
+  router.post(
+    "/api/get-all-tables-by-restaurantId",
+    tableController.handleGetAllTableByRestaurantId
+  );
   router.post("/api/create-order-by-staff", staffController.createOrder);
   router.post("/api/create-payment", paymentController.handlePaymentWithVNP);
-  router.get("/api/vnpay_return", (req, res) =>  paymentController.handlePaymentResultWithVNP(req, res, io));
+  router.get("/api/vnpay_return", (req, res) =>
+    paymentController.handlePaymentResultWithVNP(req, res, io)
+  );
+
+  router.post("/api/get-all-staff", adminController.handleGetAllStaff);
+  router.post("/api/change-password", userController.handleChangePassword);
+  router.post(
+    "/api/get-all-order-by-customerId",
+    orderController.handleGetAllOrderByCustomerId
+  );
   return app.use("/", router);
 };
 

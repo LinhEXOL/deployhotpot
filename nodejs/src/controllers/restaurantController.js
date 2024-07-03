@@ -21,7 +21,7 @@ import restaurantService from "../services/restaurantService";
 let handleGetAllRestaurants = async (req, res) => {
   try {
     let data = await restaurantService.getAllRestaurants();
-    return res.status(200).json({
+    return res.json({
       status: 200,
       message: "OK",
       data: data.data,
@@ -49,26 +49,35 @@ let handleGetAllRestaurants = async (req, res) => {
 //   }
 // };
 
-let handleCreateNewRestaurant = async (req, res) => {
+let handleCreateNewRestaurant = async (req, res, io) => {
   let data = await restaurantService.createNewRestaurant(req.body);
-  return res.status(data.status).json(data);
+  if (data.status === 200) {
+    io.sockets.emit("update-restaurant-data", "success");
+  }
+  return res.json(data);
 };
 
-let handleDeleteRestaurant = async (req, res) => {
+let handleDeleteRestaurant = async (req, res, io) => {
   if (!req.body.id) {
-    return res.status(400).json({
+    return res.json({
       status: 400,
       message: "Missing required parameter",
       data: "",
     });
   }
   let data = await restaurantService.deleteRestaurant(req.body.id);
-  return res.status(data.status).json(data);
+  if (data.status === 200) {
+    io.sockets.emit("update-restaurant-data", "success");
+  }
+  return res.json(data);
 };
 
-let handleEditRestaurant = async (req, res) => {
+let handleEditRestaurant = async (req, res, io) => {
   let data = await restaurantService.updateRestaurantData(req.body);
-  return res.status(data.status).json(data);
+  if (data.status === 200) {
+    io.sockets.emit("update-restaurant-data", "success");
+  }
+  return res.json(data);
 };
 
 // let getAllCode = async (req, res) => {
@@ -103,7 +112,7 @@ let handleEditRestaurant = async (req, res) => {
 let handleGetDetailRestaurantById = async (req, res) => {
   try {
     let data = await restaurantService.getDetailRestaurantById(req.query.id);
-    return res.status(data.status).json(data);
+    return res.json(data);
   } catch (e) {
     console.log(e);
     return res.status(500).json({

@@ -119,7 +119,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 0, // Số tiền đã hoàn trả, mặc định ban đầu là 0
       },
-
+      cusId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       sequelize,

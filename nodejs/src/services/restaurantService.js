@@ -24,7 +24,17 @@ let getAllRestaurants = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let restaurants = await db.Restaurant.findAll({
-        attributes: {},
+        where: { isDelete: "0" },
+        attributes: [
+          "id",
+          "name",
+          "address",
+          "provinceId",
+          "image",
+          "latitude",
+          "longitude",
+          "isOpen",
+        ],
       });
       resolve({
         status: 200,
@@ -91,7 +101,7 @@ let createNewRestaurant = (data) => {
         address: data.address,
         longitude: data.longitude,
         latitude: data.latitude,
-        isOpen: data.isOpen,
+        isOpen: 0,
         isDelete: "0",
       });
       resolve({
@@ -122,7 +132,7 @@ let deleteRestaurant = (restaurantId) => {
         restaurant.isDelete = "1";
         restaurant.isOpen = "0";
         await restaurant.save();
-        resolve({
+        return resolve({
           status: 200,
           message: "Delete the table succeeds! (Restaurant still exists in db)",
           data: restaurant,
@@ -138,7 +148,7 @@ let updateRestaurantData = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!data.id) {
-        resolve({
+        return resolve({
           status: 400,
           message: "Missing required parameter",
           data: "",
@@ -149,24 +159,19 @@ let updateRestaurantData = (data) => {
         raw: false,
       });
       if (restaurant) {
-        restaurant.name = data.name;
-        restaurant.provinceId = data.provinceId;
-        restaurant.latitude = data.latitude;
-        restaurant.longitude = data.longitude;
-        restaurant.address = data.address;
-        restaurant.isOpen = data.isOpen;
-        restaurant.isDelete = data.isDelete;
-        if (data.image) {
-          restaurant.image = data.image;
+        for (let key in data) {
+          if (key !== "id" && data[key] !== null) {
+            restaurant[key] = data[key];
+          }
         }
         await restaurant.save();
-        resolve({
+        return resolve({
           status: 200,
           message: "Update the restaurant succeeds!",
           data: restaurant,
         });
       } else {
-        resolve({
+        return resolve({
           status: 404,
           message: "Restaurant is not exist",
           data: "",
@@ -222,7 +227,7 @@ let getDetailRestaurantById = (inputId) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!inputId) {
-        resolve({
+        return resolve({
           status: 400,
           message: "Missing required parameter!",
           data: "",
@@ -231,17 +236,14 @@ let getDetailRestaurantById = (inputId) => {
         let data = await db.Restaurant.findOne({
           where: { id: inputId },
         });
-        if (data && data.image) {
-          data.image = new Buffer(data.image, "base64").toString("binary");
-        }
         if (data) {
-          resolve({
+          return resolve({
             status: 200,
             message: "OK",
             data: data,
           });
         } else {
-          resolve({
+          return resolve({
             status: 404,
             message: "Restaurant is not exist",
             data: "",
