@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  database-mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_DATABASE=leehotpot
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - "3307:3306"
+    expose:
+      - 3306
+
+  backend:
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - DB_PORT=3306
+      - DB_HOST=database-mysql
+    ports:
+      - 8080:8080
+  nextjs:
+    build: ./vtl-frontend
+  nginx:
+    build: ./vtl-frontend/nginx
+    ports:
+      - 80:80
+#docker-compose -p leehotpot-pro up -d

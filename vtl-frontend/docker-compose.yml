@@ -1,0 +1,30 @@
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     container_name: frontend-docker
+#     ports:
+#       - "3001:3000"
+#     volumes:
+#       - .:/app
+#       - /app/node_modules
+#   # docker-compose up
+
+# version: "3"
+# services:
+#   web:
+#     build: .
+#     ports:
+#       - "3000:80"
+#     volumes:
+#       - .:/app
+
+version: "3"
+services:
+  nextjs:
+    build: ./
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
