@@ -1,14 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import useCustomer from "@/controllers/useCustomer";
 import useNotify from "@/hooks/useNotify";
 import {
   Box,
-  Button,
   IconButton,
   List,
   ListItem,
-  Stack,
   Typography,
 } from "@mui/material";
 import ResItem from "./ResItem/ResItem";
@@ -117,139 +114,34 @@ const ListRestaurants = () => {
   }, [restaurants]);
 
   return (
-    <>
-      {/* <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
+    <Box mb={2}>
+      <Splide
+        options={{
+          type: "loop",
+          drag: "free",
+          snap: true,
+          perPage: 4,
+          autoScroll: {
+            speed: 1,
+          },
         }}
+        aria-label="Restaurants"
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          {isOverflowing && ( // Add this condition
-            <IconButton
-              onClick={handleScrollLeft}
-              sx={{
-                ml: {
-                  xs: 0,
-                  lg: 1,
-                },
+        {restaurants.map((restaurant, index) => (
+          <SplideSlide key={index}>
+            <div // Dùng div thay vì SplideSlide để ngăn chặn hành động mặc định của liên kết
+              onClick={() => {
+                // Xử lý hành động khi nhấp vào mục
+                console.log("Clicked on restaurant:", restaurant.id);
+                // Thực hiện hành động muốn khi nhấp vào, ví dụ mở modal, chuyển hướng bằng JavaScript, vv.
               }}
             >
-              <ArrowBackIosIcon
-                sx={{
-                  color: "white",
-                }}
-              />
-            </IconButton>
-          )}
-        </Box>
-        <List
-          ref={listRef as React.RefObject<HTMLDivElement>} // Update the ref type to HTMLDivElement
-          component={Stack}
-          direction="row"
-          sx={{
-            maxWidth: "100%",
-            overflow: "auto",
-            WebkitOverflowScrolling: "touch",
-            scrollBehavior: "smooth",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-          }}
-        >
-          {restaurants.map((restaurant, index) => (
-            <ListItem key={index} sx={{}}>
-              <Link
-                href={{
-                  pathname: "/restaurant",
-                  query: { restaurantId: restaurant.id },
-                }}
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                <ResItem restaurant={restaurant} />
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          {isOverflowing && ( // Add this condition
-            <IconButton
-              onClick={handleScrollRight}
-              sx={{
-                mr: {
-                  xs: 0,
-                  lg: 1,
-                },
-              }}
-            >
-              <ArrowForwardIosIcon
-                sx={{
-                  color: "white",
-                }}
-              />
-            </IconButton>
-          )}
-        </Box>
-      </Box> */}
-      <Box mb={2}>
-        <Splide
-          options={{
-            type: "loop",
-            drag: "free",
-            snap: true,
-            // gap: "1rem",
-            // pagination: false,
-            // breakpoints: {
-            //   640: {
-            //     perPage: 1,
-            //   },
-            //   768: {
-            //     perPage: 2,
-            //   },
-            //   1024: {
-            //     perPage: 3,
-            //   },
-            // },
-            perPage: 4,
-            autoScroll: {
-              speed: 1,
-            },
-            // autoWidth: true,
-          }}
-          aria-label="Restaurants"
-        >
-          {restaurants.map((restaurant, index) => (
-            <SplideSlide key={index}>
-              <Link
-                href={{
-                  pathname: "/restaurant",
-                  query: { restaurantId: restaurant.id },
-                }}
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                <ResItem restaurant={restaurant} />
-              </Link>
-            </SplideSlide>
-          ))}
-        </Splide>
-      </Box>
-    </>
+              <ResItem restaurant={restaurant} />
+            </div>
+          </SplideSlide>
+        ))}
+      </Splide>
+    </Box>
   );
 };
 
