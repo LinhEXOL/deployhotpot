@@ -1,4 +1,10 @@
 "use strict";
+import bcrypt from "bcryptjs";
+// Tạo salt với số lượt lặp là 10
+const salt = bcrypt.genSaltSync(10);
+
+// Mã hóa mật khẩu
+const hashedPassword = bcrypt.hashSync("123456", salt);
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -7,12 +13,10 @@ module.exports = {
       [
         {
           email: "admin@gmail.com",
-          password: "123456",
-          firstName: "Linh",
-          lastName: "Vu",
+          password: hashedPassword,
+          fullName: "Vu Linh",
           address: "Hanoi",
-          gender: 0,
-          roleId: "R1",
+          roleId: "1",
           phoneNumber: "0123456789",
           createdAt: new Date(),
           updatedAt: new Date(),
