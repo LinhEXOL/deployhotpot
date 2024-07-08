@@ -1,5 +1,6 @@
 "use strict";
-import bcrypt from "bcryptjs";
+const bcrypt = require("bcryptjs");
+
 // Tạo salt với số lượt lặp là 10
 const salt = bcrypt.genSaltSync(10);
 
