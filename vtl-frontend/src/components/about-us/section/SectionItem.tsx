@@ -1,13 +1,10 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { Montserrat } from "next/font/google";
 import Image from "next/legacy/image";
 import Link from "next/link";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import { Splide, SplideSlide } from "splide-nextjs/react-splide";
-
-import "splide-nextjs/splide/dist/css/themes/splide-default.min.css";
-//import AutoScroll from "@splidejs/splide-extension-auto-scroll";
-import { useEffect } from "react";
 const montserrat = Montserrat({
   weight: ["100", "200", "300", "500", "600", "800", "400", "700"],
   subsets: ["latin"],
@@ -20,7 +17,25 @@ const listImage = [
     image: "/images/restaurants/res-1.jpg",
   },
   {
-    image: "https://via.placeholder.com/350",
+    image: "/images/restaurants/res-2.jpg",
+  },
+  {
+    image: "/images/restaurants/res-3.jpg",
+  },
+  {
+    image: "/images/restaurants/res-4.jpg",
+  },
+  {
+    image: "/images/restaurants/res-5.jpg",
+  },
+  {
+    image: "/images/restaurants/res-6.jpg",
+  },
+  {
+    image: "/images/restaurants/res-7.jpg",
+  },
+  {
+    image: "/images/restaurants/res-8.jpg",
   },
 ];
 
@@ -35,7 +50,17 @@ const SectionItem = ({
   description: string;
   align: "left" | "right";
 }) => {
-  0;
+  // Hàm xử lý khi Carousel chuyển đến ảnh cuối
+  const handleOnSlideChange = (index: number) => {
+    // Nếu chuyển đến ảnh cuối và không có ảnh tiếp theo, trở về ảnh đầu
+    if (index === listImage.length - 1) {
+      setTimeout(() => {
+        // Làm việc này để giảm thiểu hiện tượng nhảy vèo
+        // Set timeout để tránh bị gián đoạn hiển thị
+        // Thêm logic xử lý khác nếu cần thiết
+      }, 1000); // Thời gian delay có thể điều chỉnh
+    }
+  };
 
   return (
     <Container sx={{ py: 2, maxWidth: "1200px", height: "fit-content" }}>
@@ -59,12 +84,12 @@ const SectionItem = ({
         >
           <Typography
             sx={{
-              fontFamily: montserrat, // Ensure the font name is correctly referenced
+              fontFamily: montserrat,
               fontWeight: 400,
               fontSize: "5rem",
               color: "#CB2128",
               textTransform: "uppercase",
-              WebkitTextStroke: "1px #FFFFFF", // Note: This style might not be supported in all browsers
+              WebkitTextStroke: "1px #FFFFFF",
               lineHeight: 1,
             }}
           >
@@ -81,7 +106,6 @@ const SectionItem = ({
               sx={{ mb: 2, fontWeight: 400, color: "#fff" }}
               dangerouslySetInnerHTML={{ __html: description }}
             />
-
             <Box
               sx={{
                 p: 1,
@@ -118,29 +142,22 @@ const SectionItem = ({
             position: "relative",
           }}
         >
-          <Splide
-            options={{
-              type: "loop",
-              focus: "center",
-              autoScroll: {
-                speed: 1,
-              },
-              autoStart: true,
-              drag: "free",
-            }}
-            // extensions={{ AutoScroll }}
+          <Carousel
+            showArrows={true}
+            autoPlay={true}
+            interval={3000}
+            transitionTime={500}
+            infiniteLoop={true}
+            showThumbs={false}
+            axis="horizontal" // Đặt axis là "horizontal" để chuyển ảnh từ trái sang phải
+            onChange={handleOnSlideChange} // Bắt sự kiện khi chuyển slide
           >
             {listImage.map((item, index) => (
-              <SplideSlide key={index}>
-                <Image
-                  src={item.image}
-                  alt="restaurant"
-                  width={500}
-                  height={320}
-                />
-              </SplideSlide>
+              <div key={index}>
+                <Image src={item.image} alt="restaurant" width={500} height={320} />
+              </div>
             ))}
-          </Splide>
+          </Carousel>
         </Box>
       </Box>
     </Container>
