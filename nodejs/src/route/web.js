@@ -1,9 +1,8 @@
 import express from "express";
-import homeController from "../controllers/homeController";
+
 import userController from "../controllers/userController";
 import restaurantController from "../controllers/restaurantController";
 import customerController from "../controllers/customerController";
-import typeController from "../controllers/typeController";
 import dishController from "../controllers/dishController";
 import staffController from "../controllers/staffController";
 import tableController from "../controllers/tableController";
@@ -16,17 +15,6 @@ import invoiceController from "../controllers/invoiceController";
 let router = express.Router();
 
 let initWebRoutes = (app, io) => {
-  router.get("/", homeController.getHomePage);
-  router.get("/about", homeController.getAboutPage);
-  router.get("/crud", homeController.getCRUD);
-
-  router.post("/post-crud", homeController.postCRUD);
-  router.get("/get-crud", homeController.displayGetCRUD);
-  router.get("/edit-crud", homeController.getEditCRUD);
-
-  router.post("/put-crud", homeController.putCRUD);
-  router.get("/delete-crud", homeController.deleteCRUD);
-
   router.post("/api/login", userController.handleLogin);
   router.post("/api/register", userController.handleRegister);
   router.post("/api/create-new-user", userController.handleCreateNewUser);
@@ -78,13 +66,6 @@ let initWebRoutes = (app, io) => {
   router.get(
     "/api/get-restaurant-by-location",
     restaurantController.handleGetRestaurantByLocation
-  );
-
-  router.post("/api/create-new-type", typeController.handleCreateType);
-  router.get("/api/get-all-types", typeController.handleGetAllTypes);
-  router.get(
-    "/api/get-detail-type-by-id",
-    typeController.handleGetDetailTypeById
   );
 
   router.get(
