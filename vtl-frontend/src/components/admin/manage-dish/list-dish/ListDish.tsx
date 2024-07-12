@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -17,7 +18,7 @@ import {
 } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {  useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAdmin from "@/controllers/useAdmin";
 import { fetchAllDishes } from "@/utils";
 import Image from "next/legacy/image";
@@ -93,20 +94,21 @@ const ListDish = () => {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: 1,
+            borderRadius: "10px",
           }}
         >
           <Box
             sx={{
               display: "flex",
               mb: 2,
+              justifyContent: "center",
             }}
           >
             <Typography variant="h3" gutterBottom>
               Create Dish
             </Typography>
           </Box>
-          <CreateDishComponent onClose={()=>setOpenCreateModal(false)}/>
+          <CreateDishComponent onClose={() => setOpenCreateModal(false)} />
         </Box>
       </Modal>
     );
@@ -114,17 +116,17 @@ const ListDish = () => {
 
   const ConfirmModal = () => {
     const handleDeleteDish = async () => {
-      const response = await deleteDishById({id:dish?.id});
+      const response = await deleteDishById({ id: dish?.id });
       if (response.status === 200) {
         successNotify("Delete dish successfully");
         setConfirmModal(false);
       } else {
         errorNotify("Delete dish failed");
       }
-    }
+    };
     return (
       <Modal open={confirmModal} onClose={() => setConfirmModal(false)}>
-         <Box
+        <Box
           sx={{
             position: "absolute",
             top: "50%",
@@ -223,8 +225,7 @@ const ListDish = () => {
         </Box>
       </Modal>
     );
-    
-  }
+  };
 
   const EditModal = () => {
     const [selectFile, setSelectFile] = useState<File | null>(null);
@@ -320,7 +321,6 @@ const ListDish = () => {
     };
 
     const handleSubmit = async () => {
-
       const base64 = selectFile
         ? await toBase64(selectFile as File)
         : dish?.image;
@@ -596,7 +596,7 @@ const ListDish = () => {
     {
       field: "image",
       headerName: "Avatar",
-      width: 200,
+      width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Image
           src={params.value ?? "/images/profile/user-1.jpg"}
@@ -680,12 +680,14 @@ const ListDish = () => {
             Dish Management
           </Typography>
           <Box flexGrow={1} />
+
           <Button
             variant="contained"
             color="primary"
             onClick={() => setOpenCreateModal(true)}
+            startIcon={<Add />}
           >
-            Create Dish
+            Add
           </Button>
         </Box>
         <Box

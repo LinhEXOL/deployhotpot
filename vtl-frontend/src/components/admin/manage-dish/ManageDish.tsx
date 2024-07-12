@@ -17,7 +17,10 @@ const ManageDishComponent = () => {
         display={"flex"}
         justifyContent={"center"}
       >
-        <Link href="/admin/manage-dish/create-dish" style={{textDecoration: 'none'}}>
+        <Link
+          href="/admin/manage-dish/create-dish"
+          style={{ textDecoration: "none" }}
+        >
           <Button variant="contained" color="primary">
             Add Dish
           </Button>

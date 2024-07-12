@@ -34,7 +34,9 @@ const ComboComp = () => {
         // Handle error
         return;
       }
-      const filteredDishes = response.data.filter((dish: any) => dish.categoryId === 1).slice(0, 5); // Lọc và chỉ lấy 5 món ăn có categoryId = 1
+      const filteredDishes = response.data
+        .filter((dish: any) => dish.categoryId === 1)
+        .slice(0, 5); // Lọc và chỉ lấy 5 món ăn có categoryId = 1
       let tmp: Dish[] = [];
       filteredDishes.forEach((dish: any) => {
         let base64Image = "";
@@ -113,11 +115,20 @@ const ComboComp = () => {
             }}
           />
           <Box className="overlay">
-            <Typography variant="h6" textOverflow="ellipsis" width="100%" textAlign="center"> {/* Đưa văn bản vào giữa */}
+            <Typography
+              variant="h6"
+              textOverflow="ellipsis"
+              width="100%"
+              textAlign="center"
+            >
+              {" "}
+              {/* Đưa văn bản vào giữa */}
               {dish.name}
             </Typography>
             <Typography textAlign="center">{dish.description}</Typography>
-            <Typography variant="subtitle1" textAlign="center">Price: {dish.price}đ</Typography>
+            <Typography variant="subtitle1" textAlign="center">
+              Price: {dish.price}đ
+            </Typography>
           </Box>
         </Box>
       </Box>

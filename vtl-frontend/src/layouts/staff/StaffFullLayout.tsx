@@ -29,10 +29,8 @@ interface Props {
 }
 
 const StaffFullLayout: React.FC<Props> = ({ children }) => {
-
   return (
     <MainWrapper>
-
       <PageWrapper>
         <Header />
         {/* <Container

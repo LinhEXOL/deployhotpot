@@ -23,7 +23,6 @@ const ResItem = ({ restaurant }: { restaurant: ResItemProps }) => {
           alignItems: "center",
           justifyContent: "center",
           padding: "10px",
-
         }}
       >
         <Box
@@ -68,11 +67,11 @@ const ResItem = ({ restaurant }: { restaurant: ResItemProps }) => {
               alignItems: "center",
               opacity: 0, // Initially hidden
               transition: "opacity 0.3s", // Smooth transition
-              height:"100%",
+              height: "100%",
               // borderRadius: "10px"
             }}
           >
-            <Typography variant="h6" textOverflow="ellipsis" width="100%" >
+            <Typography variant="h6" textOverflow="ellipsis" width="100%">
               {resName} - {address}
             </Typography>
           </Box>

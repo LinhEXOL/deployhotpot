@@ -32,13 +32,12 @@ interface InvoiceData {
   handleClose: () => void;
 }
 
-
 type Invoice = {
   id: number;
   received: number;
   type: string;
   status: string;
-}
+};
 
 type Dish = {
   id: number;
@@ -94,13 +93,7 @@ type Order = {
   tables: Table[];
 };
 
-
-
-const InvoiceModal = ({
-  orderId,
-  open,
-  handleClose,
-}: InvoiceData) => {
+const InvoiceModal = ({ orderId, open, handleClose }: InvoiceData) => {
   const invoiceData = {
     company: {
       name: "LEE HOTPOT",
@@ -162,22 +155,22 @@ const InvoiceModal = ({
   const [received, setReceived] = useState<number | undefined>(undefined);
   const [change, setChange] = useState<number | undefined>(undefined);
   const [type, setType] = useState<string>("");
-  const { createInvoice, freeTable} = useStaff();
-  const {
-    getDetailRestaurantById,
-  } = useCustomer();
+  const { createInvoice, freeTable, updateOrder } = useStaff();
+  const { getDetailRestaurantById } = useCustomer();
   const { successNotify, errorNotify } = useNotify();
-
-  
 
   useEffect(() => {
     setType("a");
 
-    if (orderDetail?.order?.totalAmount !== undefined && orderDetail?.order?.depositAmount !== undefined) {
-      setTotal((orderDetail.order.totalAmount - orderDetail.order.depositAmount) + 1000);
+    if (
+      orderDetail?.order?.totalAmount !== undefined &&
+      orderDetail?.order?.depositAmount !== undefined
+    ) {
+      setTotal(
+        orderDetail.order.totalAmount - orderDetail.order.depositAmount + 1000
+      );
     }
   }, [orderDetail]); // Thêm phụ thuộc nếu cần
-  
 
   useEffect(() => {
     setLoading(true);
@@ -220,7 +213,9 @@ const InvoiceModal = ({
 
   useEffect(() => {
     const fetchRestaurantDetails = async () => {
-      const response = await getDetailRestaurantById({ id: orderDetail?.order.restaurantId });
+      const response = await getDetailRestaurantById({
+        id: orderDetail?.order.restaurantId,
+      });
       if (response.status !== 200) {
         // Handle error
         return;
@@ -233,7 +228,7 @@ const InvoiceModal = ({
           lat: response.data.latitude,
           lng: response.data.longitude,
         },
-        province: response.data.provinceId,
+        province: response.data.province,
         address: response.data.address,
       };
       setRestaurant(restaurant);
@@ -241,18 +236,21 @@ const InvoiceModal = ({
     fetchRestaurantDetails();
   }, [orderDetail?.order.restaurantId]);
 
-// useEffect(()=>{
-//   setType("a"),
-//   setChange(  (orderDetail?.order.totalAmount - orderDetail?.order.depositAmount) * 1.1),
-//   setReceived(100000)
-// })
+  // useEffect(()=>{
+  //   setType("a"),
+  //   setChange(  (orderDetail?.order.totalAmount - orderDetail?.order.depositAmount) * 1.1),
+  //   setReceived(100000)
+  // })
 
-const today = () => {
-  const date = new Date();
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return date.toLocaleDateString('vi-VN', options); // Hoặc mã ngôn ngữ và định dạng khác
-};
-
+  const today = () => {
+    const date = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    return date.toLocaleDateString("vi-VN", options); // Hoặc mã ngôn ngữ và định dạng khác
+  };
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -270,11 +268,11 @@ const today = () => {
 
   const handleSubmitPaid = () => {
     const paidAmount = parseFloat(paidInput);
-    if (!isNaN(paidAmount) && typeof total !== 'undefined') {
+    if (!isNaN(paidAmount) && typeof total !== "undefined") {
       setPaid(paidAmount);
       setReceived(paidAmount);
-      setBalanceDue( paidAmount - total);
-      setChange( paidAmount - total);
+      setBalanceDue(paidAmount - total);
+      setChange(paidAmount - total);
     }
     handleCloseDialog();
   };
@@ -291,29 +289,46 @@ const today = () => {
   //   }
   // }, [paid, total]);
 
-
   const handleSubmit = async () => {
     const data = {
-       orderId: orderId,
-       received: received,
-       //type: type,
+      orderId: orderId,
+      received: received,
+      //type: type,
       change: change,
       //orderId: "6",
       //received: 1000,
       type: "checkout",
       //change: 100,
     };
+    let body: {
+      orderId: number | undefined;
+      // newOrderItems?: any[];
+      // newTables?: any[];
+      orderStatus?: string;
+    } = {
+      orderId: orderDetail?.order.id,
+      orderStatus: "done",
+    };
+    const res1 = await updateOrder(body);
+    if (res1.status !== 200) {
+      // Handle error
+      errorNotify(res1.data.message);
+      setLoading(false);
+      return;
+    }
+    successNotify("Update order successfully");
+    setLoading(false);
     let response = await createInvoice(data);
-    console.log("🚀 ~ handleSubmit ~ response:", response)
-    console.log("DATA", data)
+    console.log("🚀 ~ handleSubmit ~ response:", response);
+    console.log("DATA", data);
     if (response.status !== 201) {
       errorNotify(response.message);
       return;
     }
     successNotify("Create invoice successfully");
-    let res = await freeTable({orderId: orderId})
-    if(res.status === 200){
-      handleClose()
+    let res = await freeTable({ orderId: orderId });
+    if (res.status === 200) {
+      handleClose();
     }
   };
 
@@ -528,7 +543,7 @@ const today = () => {
                           align="center"
                           sx={{ border: "1px solid #e0e0e0" }}
                         >
-                          {formatCurrencyVND(row.total/row.quantity)}
+                          {formatCurrencyVND(row.total / row.quantity)}
                         </TableCell>
                         <TableCell
                           align="center"
@@ -560,14 +575,18 @@ const today = () => {
                   width: "50%",
                 }}
               >
-                <Box display={"flex"} flexDirection={"row"} width={"100%"} p={1}>
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  width={"100%"}
+                  p={1}
+                >
                   <Typography>Subtotal:</Typography>
                   <Box flexGrow={1} />
 
                   <Typography>
                     {formatCurrencyVND(orderDetail?.order.totalAmount)}
                   </Typography>
-              
                 </Box>
                 <hr
                   style={{
@@ -577,7 +596,12 @@ const today = () => {
                     border: "none",
                   }}
                 />
-                <Box display={"flex"} flexDirection={"row"} width={"100%"} p={1}>
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  width={"100%"}
+                  p={1}
+                >
                   <Typography>Tax:</Typography>
                   <Box flexGrow={1} />
 
@@ -591,7 +615,12 @@ const today = () => {
                     border: "none",
                   }}
                 />
-                <Box display={"flex"} flexDirection={"row"} width={"100%"} p={1}>
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  width={"100%"}
+                  p={1}
+                >
                   <Typography>Deposit:</Typography>
                   <Box flexGrow={1} />
 
@@ -607,13 +636,16 @@ const today = () => {
                     border: "none",
                   }}
                 />
-                <Box display={"flex"} flexDirection={"row"} width={"100%"}  p={1}>
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  width={"100%"}
+                  p={1}
+                >
                   <Typography>Total:</Typography>
                   <Box flexGrow={1} />
 
-                  <Typography>
-                    {formatCurrencyVND(total)}
-                  </Typography>
+                  <Typography>{formatCurrencyVND(total)}</Typography>
                   {/* <Typography>
                     {formatCurrencyVND((1000))}
                   </Typography> */}
@@ -635,6 +667,7 @@ const today = () => {
                   variant="text"
                   sx={{
                     textDecoration: "none",
+                    border: "solid 1px ",
                   }}
                 >
                   <Typography
@@ -664,38 +697,37 @@ const today = () => {
                     border: "none",
                   }}
                 />
-                <Box display={"flex"} flexDirection={"row"} width={"100%"} p={1}>
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  width={"100%"}
+                  p={1}
+                >
                   <Typography>Balance Due:</Typography>
                   <Box flexGrow={1} />
 
-                  <Typography>{formatCurrencyVND(balanceDue)}</Typography>
+                  <Typography>{formatCurrencyVND(balanceDue ?? 0)}</Typography>
                 </Box>
-                
               </Box>
-              
             </Box>
-
-            <Box
-              component={Button}
-              onClick={(handleSubmit)}
+            <Button
+              variant="contained"
               sx={{
-                backgroundColor: "#E6AC0D",
-                padding: "8px",
-                borderRadius: "5px",
-                marginTop: "10px",
-                ":hover": {
-                  backgroundColor: "#AE0001",
-                },
-                textDecoration: "none",
-                color: "#fff",
+                fontSize: "1.0em",
+                fontWeight: "bold",
+                marginBottom: "20px",
+                backgroundColor: "#5D87FF",
+
+                textAlign: "center",
+              }}
+              onClick={() => {
+                handleSubmit();
               }}
             >
-              <Typography>Create invoice</Typography>
-            </Box>
-            
+              Create invoice
+            </Button>
           </Box>
         </Box>
-        
       </Modal>
     </>
   );

@@ -57,7 +57,7 @@ let bookTable = (data) => {
         });
       }
       order.depositAmount = totalDepositAmount;
-      order.totalAmount = totalDepositAmount/0.3;
+      order.totalAmount = totalDepositAmount / 0.3;
       await order.save();
       resolve({
         status: 201,

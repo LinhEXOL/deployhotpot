@@ -52,7 +52,7 @@ const SubItem = ({ order }: SubItemProps) => {
         name: response.data.name,
         image: `${atob(base64Image)}`,
         address: response.data.address,
-        province: response.data.provinceId,
+        province: response.data.province,
         coordinates: {
           lat: response.data.latitude,
           lng: response.data.longitude,

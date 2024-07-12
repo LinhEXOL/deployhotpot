@@ -57,7 +57,7 @@ const ListRestaurant = () => {
           lat: element.latitude,
           lng: element.longitude,
         },
-        province: element.provinceId,
+        province: element.province,
         address: element.address,
       });
     });
@@ -81,7 +81,7 @@ const ListRestaurant = () => {
     {
       field: "resImage",
       headerName: "Image",
-      width: 200,
+      width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Image
@@ -96,18 +96,18 @@ const ListRestaurant = () => {
     {
       field: "id",
       headerName: "ID",
-      width: 100,
+      width: 80,
     },
     {
       field: "resName",
       headerName: "Name",
-      width: 200,
+      width: 300,
     },
 
     {
       field: "province",
       headerName: "Province",
-      width: 200,
+      width: 150,
     },
     {
       field: "address",
@@ -176,10 +176,10 @@ const ListRestaurant = () => {
       } else {
         errorNotify("Delete restaurant failed");
       }
-    }
+    };
     return (
       <Modal open={confirmModal} onClose={() => setConfirmModal(false)}>
-         <Box
+        <Box
           sx={{
             position: "absolute",
             top: "50%",
@@ -278,8 +278,7 @@ const ListRestaurant = () => {
         </Box>
       </Modal>
     );
-    
-  }
+  };
   const CreateModal = () => {
     return (
       <Modal open={createModal} onClose={() => setCreateModal(false)}>
@@ -289,11 +288,10 @@ const ListRestaurant = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "80%",
             bgcolor: "background.paper",
 
             boxShadow: 24,
-            p: 4,
+            p: 2,
             borderRadius: "10px",
           }}
         >
@@ -323,7 +321,7 @@ const ListRestaurant = () => {
             }}
           >
             <Typography variant="h4" gutterBottom>
-              Restaurants Management
+              Restaurant Management
             </Typography>
             <Box flexGrow={1} />
             <Button

@@ -1,5 +1,5 @@
 import * as tableService from "@/services/table";
-import  restaurantService from "@/services/restaurant";
+import restaurantService from "@/services/restaurant";
 import * as orderService from "@/services/order";
 import * as dishService from "@/services/dish";
 import * as invoiceService from "@/services/invoice";
@@ -26,7 +26,6 @@ const useStaff = () => {
   };
 
   const freeTable = async (body: any) => {
-
     return await tableService.freeTable(body);
   };
 
@@ -54,25 +53,24 @@ const useStaff = () => {
 
   const createNewOrder = async (body: any) => {
     return await orderService.createNewOrderByStaff(body);
-  }
+  };
 
   const getAllOrdersByRestaurantId = async (body: any) => {
     return await orderService.getAllOrdersByRestaurantId(body);
-  }
+  };
 
-  const updateOrder = async (body : any) => {
+  const updateOrder = async (body: any) => {
     return await orderService.updateOrder(body);
-  }
+  };
 
   const handleUpdateTable = async (body: any) => {
     return await tableService.updateTable(body);
-  }
+  };
 
   const createInvoice = async (body: any) => {
-        
-    console.log("HELLLO")
+    console.log("HELLLO");
     return await invoiceService.createNewInvoice(body);
-  }
+  };
 
   return {
     createTable,
@@ -91,7 +89,7 @@ const useStaff = () => {
     updateOrder,
     handleUpdateTable,
     createInvoice,
-    freeTable
+    freeTable,
   };
 };
 

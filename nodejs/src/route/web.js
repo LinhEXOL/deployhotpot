@@ -10,7 +10,6 @@ import tableController from "../controllers/tableController";
 import orderController from "../controllers/orderController";
 import paymentController from "../controllers/paymentController";
 import categoryController from "../controllers/categoryController";
-import comboController from "../controllers/comboController";
 import adminController from "../controllers/adminController";
 import invoiceController from "../controllers/invoiceController";
 
@@ -125,18 +124,12 @@ let initWebRoutes = (app, io) => {
     dishController.handleGetAllDishRestaurantNames
   );
 
-  router.get("/api/get-all-combos", comboController.handleGetAllCombos);
-  router.post("/api/create-new-combo", comboController.handleCreateCombo);
-  router.delete("/api/delete-combo", comboController.handleDeleteCombo);
-  router.put("/api/edit-combo", comboController.handleEditCombo);
-
   router.post(
     "/api/get-all-categories",
     categoryController.handleGetAllCategories
   );
-  router.post(
-    "/api/create-new-category",
-    categoryController.handleCreateNewCategory
+  router.post("/api/create-new-category", (req, res) =>
+    categoryController.handleCreateNewCategory(req, res, io)
   );
   router.post("/api/edit-category", (req, res) =>
     categoryController.handleEditCategory(req, res, io)
@@ -160,9 +153,6 @@ let initWebRoutes = (app, io) => {
   );
 
   router.get("/api/get-all-orders", orderController.handleGetAllOrders);
-  router.put("/api/edit-order", orderController.editHandler);
-  router.delete("api/delete-order", orderController.cancelHandler);
-  router.post("/api/choose-table", orderController.chooseTableHandler);
   router.post("/api/free-table", (req, res) =>
     tableController.freeTableHandler(req, res, io)
   );

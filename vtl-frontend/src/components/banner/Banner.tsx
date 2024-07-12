@@ -12,7 +12,6 @@ const kristi = Kristi({
   fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 const Banner = () => {
-  
   return (
     <Box
       sx={{
@@ -52,13 +51,12 @@ const Banner = () => {
         <Image
           src="/images/backgrounds/banner.jpg"
           alt="banner"
-            // height={690}
-            // width={useWindowSize().width - 17}
+          // height={690}
+          // width={useWindowSize().width - 17}
           layout="fill" // This makes the image responsive
           objectFit="cover"
           // Adjust as needed
           priority
-          
         />
       </Box>
       <Box
@@ -79,7 +77,6 @@ const Banner = () => {
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",
-
           }}
         >
           <Typography
@@ -93,7 +90,6 @@ const Banner = () => {
               color: "#ff6f3d",
               fontSize: "85px",
               marginTop: "-70px",
-              
             }}
           >
             Taste the magic of
@@ -106,7 +102,6 @@ const Banner = () => {
               display: "flex",
               justifyContent: "flex-end",
               flexGrow: 1,
-           
             }}
           >
             <Image

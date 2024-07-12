@@ -9,17 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       //define association here
-      Dish.hasOne(models.Markdown, { foreignKey: "dishId" });
       Dish.belongsTo(models.Category, {
         foreignKey: "categoryId",
         targetKey: "id",
       });
       Dish.belongsTo(models.OrderItem, { foreignKey: "id" });
-      Dish.belongsToMany(models.Combo, {
-        through: "ComboDish",
-        foreignKey: "dishId",
-        otherKey: "comboId",
-      });
     }
   }
   Dish.init(

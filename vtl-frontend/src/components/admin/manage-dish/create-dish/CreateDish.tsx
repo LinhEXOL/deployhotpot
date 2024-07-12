@@ -21,10 +21,10 @@ type Category = {
   name: string;
   description: string;
 };
-interface CreateDishComponentProps{
-  onClose: ()=>void;
+interface CreateDishComponentProps {
+  onClose: () => void;
 }
-const CreateDishComponent = ({onClose}:CreateDishComponentProps) => {
+const CreateDishComponent = ({ onClose }: CreateDishComponentProps) => {
   const [selectFile, setSelectFile] = React.useState<File | null>(null);
   const [longPressTimeout, setLongPressTimeout] = React.useState<number | null>(
     null
@@ -47,7 +47,6 @@ const CreateDishComponent = ({onClose}:CreateDishComponentProps) => {
   const { createDish, getAllCategories } = useAdmin();
   const { toBase64 } = useHelper();
   const { successNotify, errorNotify } = useNotify();
-  
 
   React.useEffect(() => {
     const fetchCategories = async () => {
@@ -153,7 +152,13 @@ const CreateDishComponent = ({onClose}:CreateDishComponentProps) => {
   };
 
   return (
-    <Box display={"flex"} justifyContent={"center"}>
+    <Box
+      display={"flex"}
+      justifyContent={"center"}
+      sx={{
+        height: "610px",
+      }}
+    >
       <Grid container spacing={2}>
         <>
           <Grid
@@ -231,7 +236,6 @@ const CreateDishComponent = ({onClose}:CreateDishComponentProps) => {
               inputProps={{
                 min: 0,
               }}
-              
             />
           </Grid>
           <Grid

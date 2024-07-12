@@ -145,10 +145,9 @@ type Restaurant = {
   id: number;
   name: string;
   address: string;
-  provinceId: string;
+  province: string;
   latitude: number;
   longitude: number;
-  isOpen: boolean;
 };
 
 const ReserveComponent = () => {
@@ -163,7 +162,7 @@ const ReserveComponent = () => {
   const [isChecked, setIsChecked] = useState<boolean[]>(
     dishes.map(() => false)
   );
-  const {fullName, phoneNumber, email, id } = useAppSelector(
+  const { fullName, phoneNumber, email, id } = useAppSelector(
     (state) => state.profile
   );
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
@@ -185,8 +184,6 @@ const ReserveComponent = () => {
   const { successNotify, errorNotify } = useNotify();
   const dispatch = useAppDispatch();
   const { bookTable, getAllDishes, getAllRestaurants } = useCustomer();
-
-  
 
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -210,23 +207,23 @@ const ReserveComponent = () => {
       }
       let tmp: Dish[] = [];
       response.data.map((dish: any) => {
-        if(dish.categoryId === 1) {
+        if (dish.categoryId === 1) {
           let base64Image = "";
-        if (dish.image) {
-          const imageBuffer = dish.image.data;
-          base64Image = atob(Buffer.from(imageBuffer).toString("base64"));
-        } else {
-          base64Image = "https://example.com";
-        }
-        tmp.push({
-          id: dish.id,
-          name: dish.name,
-          price: dish.price,
-          description: dish.description,
-          image: base64Image,
-          category: dish.categoryId,
-          isSelect: false,
-        });
+          if (dish.image) {
+            const imageBuffer = dish.image.data;
+            base64Image = atob(Buffer.from(imageBuffer).toString("base64"));
+          } else {
+            base64Image = "https://example.com";
+          }
+          tmp.push({
+            id: dish.id,
+            name: dish.name,
+            price: dish.price,
+            description: dish.description,
+            image: base64Image,
+            category: dish.categoryId,
+            isSelect: false,
+          });
         }
       });
       setDishes(tmp);
@@ -697,7 +694,7 @@ const ReserveComponent = () => {
             createdAt: "",
             updatedAt: "",
             paymentStatus: "pending",
-            cusId:  id === -1 ? undefined : id,
+            cusId: id === -1 ? undefined : id,
             email: cusEmail,
           },
           orderItems: orderItems,
@@ -837,7 +834,7 @@ const ReserveComponent = () => {
               <MenuItem value={"Bữa tối"}>Dinner</MenuItem>
             </Select>
           </Grid>
-         
+
           <Grid xs={4}>
             <Select
               value={time}
@@ -845,17 +842,13 @@ const ReserveComponent = () => {
                 setTime(event.target.value);
               }}
               fullWidth
-              
             >
               <MenuItem key={-1} value={"00:00"}>
                 ----Choose time----
               </MenuItem>
               {timeSlot === "Bữa trưa"
                 ? launchTime.map((t, index) => (
-                    <MenuItem
-                      key={index}
-                      value={t.time}
-                    >
+                    <MenuItem key={index} value={t.time}>
                       <>{formatTime(t.time)}</>
                     </MenuItem>
                   ))

@@ -3,7 +3,11 @@ import { useState } from "react";
 import useAdmin from "@/controllers/useAdmin";
 import useNotify from "@/hooks/useNotify";
 
-const CreateCategoryComponent = () => {
+interface CreateCategoryComponentProps {
+  onClose: () => void;
+}
+
+const CreateCategoryComponent = ({ onClose }: CreateCategoryComponentProps) => {
   const [categoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
   const { createNewCategory } = useAdmin();
@@ -16,6 +20,7 @@ const CreateCategoryComponent = () => {
         description: description,
       });
       if (response.status === 201) {
+        onClose();
         successNotify("Create category successfully");
       } else {
         errorNotify("Create category failed");
@@ -31,15 +36,16 @@ const CreateCategoryComponent = () => {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
-        padding: "20px",
         borderRadius: "10px",
         backgroundColor: "white",
+        width: "500px",
       }}
     >
       <Typography
         sx={{
           fontSize: "1.5rem",
           fontWeight: "bold",
+          textAlign: "center",
         }}
       >
         Create Category
@@ -81,9 +87,30 @@ const CreateCategoryComponent = () => {
           />
         </Grid>
       </Grid>
-      <Button variant="contained" onClick={handleCreateCategory}>
+      {/* <Button variant="contained" onClick={handleCreateCategory}>
         Create Category
-      </Button>
+      </Button> */}
+
+      <Grid
+        xs={12}
+        sm={12}
+        md={12}
+        lg={12}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Button
+          onClick={handleCreateCategory}
+          variant="contained"
+          sx={{ width: 200, height: 50, marginTop: 5 }}
+          type="submit"
+        >
+          Create Category
+        </Button>
+      </Grid>
     </Box>
   );
 };

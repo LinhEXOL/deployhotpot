@@ -8,12 +8,12 @@ export default function LoginPage() {
   return (
     <PageContainer title="Login">
       <Box>
-        <LoginComponent isAdmin={true}/>
+        <LoginComponent isAdmin={true} />
       </Box>
     </PageContainer>
   );
 }
 
 LoginPage.getLayout = function getLayout(page: ReactElement) {
-    return <AdminFullLayout>{page}</AdminFullLayout>;
-}
+  return <AdminFullLayout>{page}</AdminFullLayout>;
+};

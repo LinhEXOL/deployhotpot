@@ -25,9 +25,10 @@ import {
 import useAdmin from "@/controllers/useAdmin";
 import useNotify from "@/hooks/useNotify";
 import { use, useEffect, useState } from "react";
-import { Cancel, Close, Delete, Edit, Save } from "@mui/icons-material";
+import { Cancel, Close, Delete, Edit, Save, Add } from "@mui/icons-material";
 import { socket } from "@/socket";
 import Grid from "@mui/material/Unstable_Grid2";
+import CreateCategoryComponent from "../create/CreateCategory";
 type Category = {
   id: number;
   name: string;
@@ -41,6 +42,7 @@ const ListCategory = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>();
   const { successNotify, errorNotify } = useNotify();
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const fetchCategories = async () => {
     const response = await getAllCategories();
     if (response.status === 200) {
@@ -52,7 +54,7 @@ const ListCategory = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("update-data", (data) => {
+    socket.on("update-category", (data) => {
       if (data === "success") {
         fetchCategories();
       }
@@ -61,6 +63,33 @@ const ListCategory = () => {
       socket.off("update-category");
     };
   }, [socket]);
+
+  const CreateModal = () => {
+    return (
+      <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "10px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              mb: 2,
+            }}
+          ></Box>
+          <CreateCategoryComponent onClose={() => setOpenCreateModal(false)} />
+        </Box>
+      </Modal>
+    );
+  };
 
   const ConfirmModal = () => {
     const handleDelete = async () => {
@@ -357,6 +386,7 @@ const ListCategory = () => {
   ];
   return (
     <>
+      <CreateModal />
       <EditModal />
       <ConfirmModal />
       <Box
@@ -369,14 +399,25 @@ const ListCategory = () => {
           backgroundColor: "white",
         }}
       >
-        <Typography
+        <Box
           sx={{
-            fontSize: "1.5rem",
-            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            mb: 2,
           }}
         >
-          All Categories
-        </Typography>
+          <Typography variant="h4">Category Management</Typography>
+          <Box flexGrow={1} />
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenCreateModal(true)}
+            startIcon={<Add />}
+          >
+            Add
+          </Button>
+        </Box>
         <Box
           sx={{
             display: "flex",

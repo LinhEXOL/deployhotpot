@@ -258,7 +258,7 @@ let searchTable = (data) => {
         } else {
           //find by location
           restaurants = await db.Restaurant.findAll({
-            where: { provinceId: location },
+            where: { province: location },
           });
         }
 

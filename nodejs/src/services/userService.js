@@ -82,7 +82,6 @@ let handleUserRegister = (data) => {
         phoneNumber: data.phoneNumber,
         image: data.image,
         roleId: 3,
-        type_register: 1,
       });
       resolve({
         status: 201,
@@ -173,37 +172,6 @@ let getAllUsers = () => {
   });
 };
 
-let getAllCodeUserService = (typeInput) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!typeInput) {
-        resolve({
-          status: 400,
-          message: "Missing required parameter",
-        });
-      } else {
-        let res = {};
-        let allcode = await db.Allcode.findAll({
-          where: { type: typeInput },
-        });
-        res.status = 0;
-        res.data = allcode;
-        resolve(res);
-      }
-
-      // let res = {};
-      // let allcode = await db.Allcode.findAll({
-      //   where: { type: typeInput },
-      // });
-      // res.status = 0;
-      // res.data = allcode;
-      // resolve(res);
-    } catch (e) {
-      reject(e);
-    }
-  });
-};
-
 let createNewUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -236,7 +204,6 @@ let createNewUser = (data) => {
         phoneNumber: data.phoneNumber,
         image: data.image,
         roleId: data.roleId,
-        type_register: 1,
       });
       resolve({
         status: 201,
@@ -457,7 +424,6 @@ let createNewStaff = (data) => {
         phoneNumber: data.phoneNumber,
         image: null,
         roleId: 2,
-        type_register: 1,
       });
       let staffRestaurantMap = await db.StaffRestaurantMap.create({
         staffId: user.id,
@@ -480,7 +446,6 @@ let createNewStaff = (data) => {
 module.exports = {
   handleUserLogin: handleUserLogin,
   getAllUsers: getAllUsers,
-  getAllCodeUserService: getAllCodeUserService,
   handleUserRegister,
   createNewUser: createNewUser,
   getUserInfoById: getUserInfoById,

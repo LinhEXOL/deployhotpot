@@ -80,18 +80,6 @@ let handleGetAllUsers = async (req, res) => {
   });
 };
 
-let getAllCodeUser = async (req, res) => {
-  try {
-    let data = await userService.getAllCodeUserService(req.query.type);
-    return res.status(200).json(data);
-  } catch (e) {
-    return res.status(400).json({
-      status: 400,
-      message: "Error from server",
-    });
-  }
-};
-
 let handleCreateNewUser = async (req, res) => {
   try {
     if (
@@ -214,7 +202,6 @@ const handleChangePassword = async (req, res) => {
 module.exports = {
   handleLogin: handleLogin,
   handleGetAllUsers: handleGetAllUsers,
-  getAllCodeUser: getAllCodeUser,
   handleRegister,
   handleCreateNewUser,
   handleDeleteUser,

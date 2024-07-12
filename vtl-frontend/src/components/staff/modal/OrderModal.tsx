@@ -118,7 +118,6 @@ const OrderModal = ({ orderId, onClose, open }: OrderModalProps) => {
     fetchOrder();
   }, [orderId]);
 
-
   return (
     <>
       <Modal open={open} onClose={onClose}>
@@ -135,7 +134,6 @@ const OrderModal = ({ orderId, onClose, open }: OrderModalProps) => {
             },
             height: "80%",
             backgroundColor: "#EDEEF1",
-            border: "2px solid #000",
             padding: "20px",
             borderRadius: "10px",
             overflowY: "auto",
@@ -320,7 +318,7 @@ const OrderModal = ({ orderId, onClose, open }: OrderModalProps) => {
                 position: "absolute",
                 bottom: "20px",
                 right: "20px",
-                backgroundColor: "#E6AC0D",
+                backgroundColor: "#5D87FF",
                 padding: "10px",
                 borderRadius: "5px",
                 marginRight: "10px",
@@ -337,10 +335,10 @@ const OrderModal = ({ orderId, onClose, open }: OrderModalProps) => {
         </Box>
       </Modal>
       <InvoiceModal
-        orderId = {orderId}
+        orderId={orderId}
         open={openInvoiceModal}
         handleClose={() => {
-          setOpenInvoice(false); 
+          setOpenInvoice(false);
           onClose();
         }}
       />

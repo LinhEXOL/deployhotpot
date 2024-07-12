@@ -96,6 +96,8 @@ const UpdateOrderComponent = () => {
   >("ALL");
   const [key, setKey] = useState(new Set<string>());
   const [tables, setTables] = useState<Table[]>([]);
+  const [fullName, setFullName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const { restaurantId } = useAppSelector((state) => state.profile);
   const { getAvailableTable, updateOrder } = useStaff();
   const { errorNotify, successNotify } = useNotify();
@@ -117,6 +119,8 @@ const UpdateOrderComponent = () => {
     setOrderDetail(tmp);
     setNewOrderItems(tmp?.orderItems);
     setTableSelected(tmp?.tables);
+    setFullName(tmp?.order.fullName);
+    setPhoneNumber(tmp?.order.phoneNumber);
     return tmp; // return the fetched order detail
   };
   const fetchDishes = async (orderDetail: any) => {
@@ -233,6 +237,12 @@ const UpdateOrderComponent = () => {
     });
   };
 
+  useEffect(() => {
+    if (orderDetail?.order.fullName) {
+      setFullName(orderDetail.order.fullName);
+    }
+  }, [orderDetail]);
+
   const handleSelected = (index: number, value: boolean) => {
     let tmp = [...isChecked];
     tmp[index] = value;
@@ -315,9 +325,12 @@ const UpdateOrderComponent = () => {
       newOrderItems?: any[];
       newTables?: any[];
       orderStatus?: string;
+      fullName?: string;
+      phoneNumber?: string;
     } = {
       orderId: orderDetail?.order.id,
     };
+    console.log("FULLNAME", fullName);
     console.log("🚀 ~ handleUpdateOrder ~ key:", key);
     if (key.has("newOrderItems")) {
       body = {
@@ -325,6 +338,19 @@ const UpdateOrderComponent = () => {
         newOrderItems: newOrderItems,
       };
     }
+    if (key.has("fullName")) {
+      body = {
+        ...body,
+        fullName: fullName,
+      };
+    }
+    if (key.has("phoneNumber")) {
+      body = {
+        ...body,
+        phoneNumber: phoneNumber,
+      };
+    }
+    console.log("BODY", body);
     if (key.has("newTables")) {
       let status = "confirmed";
       if (tableSelected.length !== 0) status = "seated";
@@ -414,6 +440,48 @@ const UpdateOrderComponent = () => {
           <Collapse in={open} timeout="auto" unmountOnExit sx={{ pl: 4 }}>
             <Grid container spacing={2}>
               <Grid item xs={4}>
+                Fullname
+              </Grid>
+              <Grid item xs={1}>
+                :
+              </Grid>
+              <Grid item xs={7}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  value={fullName}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    setKey((prevKey) => {
+                      const newKey = new Set(prevKey);
+                      newKey.add("fullName");
+                      return newKey;
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                Phone number
+              </Grid>
+              <Grid item xs={1}>
+                :
+              </Grid>
+              <Grid item xs={7}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    setPhoneNumber(e.target.value);
+                    setKey((prevKey) => {
+                      const newKey = new Set(prevKey);
+                      newKey.add("phoneNumber");
+                      return newKey;
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4}>
                 Order Id
               </Grid>
               <Grid item xs={1}>
@@ -458,7 +526,7 @@ const UpdateOrderComponent = () => {
               <Grid item xs={7}>
                 {orderDetail?.order.resStatus}
               </Grid>
-              <Grid item xs={4}>
+              {/* <Grid item xs={4}>
                 Payment Status
               </Grid>
               <Grid item xs={1}>
@@ -466,7 +534,7 @@ const UpdateOrderComponent = () => {
               </Grid>
               <Grid item xs={7}>
                 {orderDetail?.order.paymentStatus}
-              </Grid>
+              </Grid> */}
             </Grid>
           </Collapse>
           <ListItemButton

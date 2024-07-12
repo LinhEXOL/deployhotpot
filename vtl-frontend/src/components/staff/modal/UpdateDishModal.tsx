@@ -1,4 +1,12 @@
-import { Box, Button, Card, Checkbox, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Modal,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Image from "next/legacy/image";
 import { useState } from "react";
@@ -32,9 +40,7 @@ const UpdateDishModal = ({
   handleCloseMenu,
 }: UpdateDishModalProps) => {
   const [dishes, setDishes] = useState<Dish[]>([]);
-  const [isChecked, setIsChecked] = useState<boolean[]>(
-    []
-  );
+  const [isChecked, setIsChecked] = useState<boolean[]>([]);
   return (
     <Modal
       open={openMenu}

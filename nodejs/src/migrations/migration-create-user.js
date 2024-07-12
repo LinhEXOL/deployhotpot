@@ -29,9 +29,6 @@ module.exports = {
       image: {
         type: Sequelize.BLOB("long"),
       },
-      type_register: {
-        type: Sequelize.INTEGER,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

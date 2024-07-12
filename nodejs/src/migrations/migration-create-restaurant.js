@@ -14,7 +14,7 @@ module.exports = {
       image: {
         type: Sequelize.BLOB("long"),
       },
-      provinceId: {
+      province: {
         type: Sequelize.STRING,
       },
       address: {
@@ -25,15 +25,6 @@ module.exports = {
       },
       latitude: {
         type: Sequelize.DOUBLE,
-      },
-      isOpen: {
-        type: Sequelize.INTEGER,
-      },
-      rate: {
-        type: Sequelize.DOUBLE,
-      },
-      isDelete: {
-        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

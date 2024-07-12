@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { socket } from "@/socket";
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button, Modal, TextField } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import OrderModal from "../../modal/OrderModal";
 import { useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import useStaff from "@/controllers/useStaff";
+
 type Table = {
   id: number;
   name: string;
-  status: string;
   capacity: number;
   restaurantId: number;
   position: string;
@@ -23,8 +23,12 @@ const ListTable = () => {
   const [open2, setOpen2] = React.useState(false);
   const [orderId, setOrderId] = React.useState(0);
   const [tables, setTables] = React.useState<Table[]>([]);
+  const [filterText, setFilterText] = React.useState(""); // State để lưu giá trị nhập liệu
+  const [highlightedTable, setHighlightedTable] = React.useState<number | null>(
+    null
+  ); // State để lưu id của bàn được highlight
   const { restaurantId } = useAppSelector((state: RootState) => state.profile);
-  const handleOpen = ( orderId: number | null) => {
+  const handleOpen = (orderId: number | null) => {
     if (orderId === 0) {
       setOpen(true);
       return;
@@ -34,7 +38,7 @@ const ListTable = () => {
   };
   const { getAllTablesByRestaurantId } = useStaff();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getAllTables = async () => {
       const response = await getAllTablesByRestaurantId({
         restaurantId: restaurantId,
@@ -48,7 +52,6 @@ const ListTable = () => {
         tmp.push({
           id: table.id,
           name: table.name,
-          status: table.isOccupied,
           capacity: table.capacity,
           restaurantId: table.restaurantId,
           position: table.position,
@@ -60,9 +63,9 @@ const ListTable = () => {
     getAllTables();
   }, [restaurantId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     socket.on("free-table", (data) => {
-      if (data === "success"){
+      if (data === "success") {
         const getAllTables = async () => {
           const response = await getAllTablesByRestaurantId({
             restaurantId: restaurantId,
@@ -76,7 +79,6 @@ const ListTable = () => {
             tmp.push({
               id: table.id,
               name: table.name,
-              status: table.isOccupied,
               capacity: table.capacity,
               restaurantId: table.restaurantId,
               position: table.position,
@@ -88,17 +90,56 @@ const ListTable = () => {
         getAllTables();
       }
     });
-    return () => {
-    };
+    return () => {};
   }, [socket]);
 
-  
   const handleClose = () => setOpen(false);
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterText(event.target.value);
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      const table = tables.find(
+        (table) => table.name.toLowerCase() === filterText.toLowerCase()
+      );
+      if (table) {
+        setHighlightedTable(table.id);
+        const tableElement = document.getElementById(`table-${table.id}`);
+        if (tableElement) {
+          tableElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      } else {
+        setHighlightedTable(null);
+      }
+    }
+  };
+
   return (
-    <Box>
+    <Box
+      sx={{
+        marginBottom: "0px",
+      }}
+    >
+      <TextField
+        label="Search table"
+        value={filterText}
+        onChange={handleFilterChange}
+        onKeyPress={handleKeyPress}
+        fullWidth
+        margin="normal"
+      />
       <Grid container spacing={2}>
         {tables.map((table) => (
-          <Grid xs={12} sm={6} md={4} lg={3} key={table.id}>
+          <Grid
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            key={table.id}
+            id={`table-${table.id}`}
+          >
             <Button
               variant="outlined"
               sx={{
@@ -107,13 +148,15 @@ const ListTable = () => {
                 fontSize: "1.5rem",
                 textTransform: "none",
                 color: table.orderId === 0 ? "#000" : "#fff",
-                backgroundColor: table.orderId === 0 ? "#fff" : "#178CF1",
+                backgroundColor: table.orderId === 0 ? "#fff" : "#539BFF",
                 "&:hover": {
                   backgroundColor: "#e46e6e",
-                  color: "#fff" ,
+                  color: "#fff",
                 },
+                border:
+                  highlightedTable === table.id ? "2px solid red" : undefined, // Tạo viền đỏ nếu là bàn được highlight
               }}
-              onClick={() => handleOpen( table.orderId)}
+              onClick={() => handleOpen(table.orderId)}
             >
               {table.name}
             </Button>

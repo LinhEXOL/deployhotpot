@@ -1,7 +1,7 @@
 import PageContainer from "@/components/container/PageContainer";
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import FullLayout from "@/layouts/full/FullLayout";
-import { ReactElement, useEffect} from "react";
+import { ReactElement, useEffect } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import AdminFullLayout from "@/layouts/admin/AdminFullLayout";
 import StaffFullLayout from "@/layouts/staff/StaffFullLayout";

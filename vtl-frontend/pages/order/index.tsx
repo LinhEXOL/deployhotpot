@@ -13,7 +13,7 @@ export default function OrderPage() {
   }, [id]);
   return (
     <PageContainer title="Order">
-        <ListOrder />
+      <ListOrder />
     </PageContainer>
   );
 }

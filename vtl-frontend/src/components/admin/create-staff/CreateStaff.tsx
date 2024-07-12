@@ -25,7 +25,7 @@ import Image from "next/legacy/image";
 import Edit from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import { Cancel, Save } from "@mui/icons-material";
+import { Cancel, Save, Add } from "@mui/icons-material";
 import { socket } from "@/socket";
 type Staff = {
   id: number;
@@ -44,10 +44,9 @@ type Restaurant = {
   id: number;
   name: string;
   address: string;
-  provinceId: string;
+  province: string;
   latitude: number;
   longitude: number;
-  isOpen: boolean;
 };
 
 const CreateStaffComponent = () => {
@@ -75,6 +74,7 @@ const CreateStaffComponent = () => {
   const [deleteModal, setDeleteModal] = React.useState(false);
   const fetchRestaurants = async () => {
     const response = await getAllRestaurants();
+
     if (response.status !== 200) {
       // Handle error
       return;
@@ -88,11 +88,44 @@ const CreateStaffComponent = () => {
   }, []);
   const fetchStaffs = async () => {
     const response = await getAllStaff();
+    console.log("STAFF", response.data);
     if (response.status !== 200) {
-      // Handle error
+      errorNotify(response.message);
       return;
     }
-    setStaffs(response.data);
+    let tmp: Staff[] = [];
+    response.data.forEach((element: any) => {
+      if (element.image && element) {
+        const imageBuffer = element.image.data;
+        const base64Image = Buffer.from(imageBuffer).toString("base64");
+        tmp.push({
+          id: element.id,
+          fullName: element.fullName,
+          email: element.email,
+          phoneNumber: element.phoneNumber,
+          address: element.address,
+          roleId: element.roleId,
+          restaurantId: element.restaurantId,
+          image: `${atob(base64Image)}`,
+          createAt: element.createAt,
+          updateAt: element.updateAt,
+        });
+      } else {
+        tmp.push({
+          id: element.id,
+          fullName: element.fullName,
+          email: element.email,
+          phoneNumber: element.phoneNumber,
+          address: element.address,
+          roleId: element.roleId,
+          restaurantId: element.restaurantId,
+          image: "/images/profile/user-1.jpg",
+          createAt: element.createAt,
+          updateAt: element.updateAt,
+        });
+      }
+    });
+    setStaffs(tmp);
   };
   React.useEffect(() => {
     fetchStaffs();
@@ -125,7 +158,7 @@ const CreateStaffComponent = () => {
     {
       field: "image",
       headerName: "Avatar",
-      width: 150,
+      width: 80,
       renderCell: (params: GridRenderCellParams) => (
         <Image
           src={params.value ?? "/images/profile/user-1.jpg"}
@@ -139,10 +172,10 @@ const CreateStaffComponent = () => {
     {
       field: "id",
       headerName: "ID",
-      width: 90,
+      width: 70,
     },
     { field: "fullName", headerName: "Full Name", width: 150 },
-    { field: "email", headerName: "Email", width: 150 },
+    { field: "email", headerName: "Email", width: 200 },
     { field: "phoneNumber", headerName: "Phone Number", width: 150 },
     { field: "address", headerName: "Address", width: 150 },
     {
@@ -364,7 +397,8 @@ const CreateStaffComponent = () => {
         id: staffId,
         email: emailInModal === email ? undefined : emailInModal,
         fullName: lastNameInModal + " " + firstNameInModal,
-        phoneNumber: phoneNumberInModal === phoneNumber ? undefined : phoneNumberInModal,
+        phoneNumber:
+          phoneNumberInModal === phoneNumber ? undefined : phoneNumberInModal,
         address: addressInModal,
         restaurantId: resIdInModal,
       };
@@ -854,8 +888,9 @@ const CreateStaffComponent = () => {
             variant="contained"
             color="primary"
             onClick={() => setCreateModal(true)}
+            startIcon={<Add />}
           >
-            Create Staff
+            Add
           </Button>
         </Box>
 

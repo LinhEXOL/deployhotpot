@@ -29,6 +29,21 @@ const Profile = () => {
     setAnchorEl2(null);
   };
   const { image, fullName, roleId } = useAppSelector((state) => state.profile);
+  const handleLogout = () => {
+    switch (roleId) {
+      case 1:
+        window.location.href = "/admin";
+        break;
+      case 2:
+        window.location.href = "/staff";
+        break;
+      case 3:
+        window.location.href = "/";
+        break;
+      default:
+        window.location.href = "/";
+    }
+  };
   return (
     <Box>
       <IconButton
@@ -138,7 +153,7 @@ const Profile = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => (window.location.href = "/")}
+            onClick={handleLogout}
             fullWidth
             endIcon={<Logout />}
           >

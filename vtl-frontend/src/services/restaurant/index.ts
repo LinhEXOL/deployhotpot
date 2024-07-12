@@ -1,6 +1,5 @@
 import { client } from "../client";
 
-
 const createNewRestaurant = async (body: any) => {
   try {
     const response = await client.post("/create-new-restaurant", body);
@@ -21,7 +20,7 @@ const editRestaurant = async (body: any) => {
 
 const deleteRestaurant = async (body: any) => {
   try {
-    const response = await client.post("/delete-restaurant", body );
+    const response = await client.post("/delete-restaurant", body);
     return response;
   } catch (error) {
     console.log(error);

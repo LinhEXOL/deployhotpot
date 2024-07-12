@@ -17,11 +17,6 @@ module.exports = {
         allowNull: false,
         defaultValue: 1,
       },
-      isOccupied: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-      },
       position: {
         type: Sequelize.STRING,
       },

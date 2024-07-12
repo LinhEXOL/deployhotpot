@@ -4,8 +4,20 @@ import db from "../models/index";
 import mailer from "./mailService";
 const invoiceService = require("../services/invoiceService");
 
-const getAllOrders = async (orderDAO) => {
-  return await orderDAO.findAllOrders();
+let getAllOrders = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let orders = await db.Order.findAll();
+
+      resolve({
+        status: 200,
+        message: "OK",
+        data: orders,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
 };
 
 const validateTime = (currDate, resDate, resTime) => {
@@ -33,129 +45,6 @@ const isFieldEmpty = (payload) => {
       message: "Please fill in all fields!",
     };
   }
-};
-
-const registerOrder = async (orderDAO, payload) => {
-  isFieldEmpty(payload);
-  validateTime(new Date(), payload.resDate, payload.resTime);
-  checkClosingOpeningTime(payload.resTime);
-  return await orderDAO.createOrder(payload);
-};
-
-const editOrder = async (orderId, orderDAO, payload) => {
-  const order = await orderDAO.findOrderById(orderId);
-  if (!order)
-    throw {
-      status: 404,
-      message: "Order not found!",
-    };
-  validateTime(new Date(), payload.resDate, payload.resTime);
-  checkClosingOpeningTime(payload.resTime);
-  return await orderDAO.updateOrder(orderId, payload);
-};
-
-const cancelOrder = async (orderId, orderDAO) => {
-  const order = await orderDAO.findOrderById(orderId);
-  if (order) return await orderDAO.deleteOrder(order);
-
-  throw {
-    status: 400,
-    message: "Given order doesn't exist!",
-  };
-};
-
-const compareResDateToCurrDate = (resDate, currDate) => {
-  return resDate > currDate ? 1 : resDate < currDate ? -1 : 0;
-};
-
-const chooseTable = async (orderId, tableId, orderDAO, tableDAO) => {
-  let order = await orderDAO.findOrderById(orderId);
-  if (!order) {
-    throw {
-      status: 404,
-      message: "Order not found!",
-    };
-  }
-  const table = await tableDAO.findTableById(tableId);
-
-  const currDate = new Date();
-  const currDateStr = dateTimeValidator.asDateString(currDate);
-
-  /**
-   * if the order day is in the future (compared to current date)
-   *  => throw error
-   */
-  if (compareResDateToCurrDate(order.resDate, currDateStr) === 1) {
-    throw {
-      status: 400,
-      message: "Booking a table is only available on the order date!",
-    };
-  }
-
-  /**
-   * if the order day is in the past (compared to current date)
-   *  => update the order's status to 'missed'
-   */
-
-  if (compareResDateToCurrDate(order.resDate, currDateStr) === -1) {
-    await orderDAO.setOrderStatus(order, "missed");
-  }
-
-  /**
-   * If the order day is equal to current day
-   *  and order time is the past (compared to current date - 30 minutes)
-   *  => update the order's status to missed
-   */
-  if (compareResDateToCurrDate(order.resDate, currDateStr) === 0) {
-    const currTimePlus30minsStr = dateTimeValidator.asTimeString(
-      new Date(currDate.setMinutes(currDate.getMinutes() - 2))
-    );
-    if (currTimePlus30minsStr > order?.resTime) {
-      order = await orderDAO.setOrderStatus(order, "missed");
-    }
-  }
-  /**
-   *
-   * if order.resStatus === 'seated'
-   *  => throw error => "You've already reserved a table. Please make a new order."
-   * if order.resStatus === 'missed'
-   *  => throw error => "You've missed your order date"
-   */
-  if (order.resStatus === "seated") {
-    throw {
-      status: 400,
-      message: "You've already reserved a table! Please make a new order.",
-    };
-  } else if (order.resStatus === "missed") {
-    throw {
-      status: 400,
-      message:
-        "You've missed the order date and time! Please make a new order.",
-    };
-  }
-  /**
-   *
-   * If the given table is already occupied throw an error
-   */
-  if (table.isOccupied)
-    throw {
-      status: 400,
-      message: "Given table is already reserved!",
-    };
-
-  /**
-   *
-   * If the given order's party size is bigger than the table's capacity =>
-   *  throw Error
-   *  else => create the record
-   */
-  if (order.people > table.capacity)
-    throw {
-      status: 400,
-      message: "Order's party size is too big for this table!",
-    };
-
-  return await orderDAO.setOrderTable(orderId, tableId);
 };
 
 let getAllOrdersByRestaurantId = (data) => {
@@ -221,11 +110,6 @@ let updateStatusOrder = (data) => {
           },
           raw: false,
         });
-        if (data.status === "seated") {
-          table.isOccupied = 1;
-        } else {
-          table.isOccupied = 0;
-        }
         await table.save();
       }
 
@@ -449,6 +333,7 @@ let getDetailOrderByOrderId = (data) => {
             id: orderItems[i].id,
             dishId: dish.id,
             dishName: dish.name,
+            image: dish.image,
             price: orderItems[i].price,
             quantity: orderItems[i].quantity,
           });
@@ -592,6 +477,11 @@ const newUpdateOrder = (data) => {
         });
         return;
       }
+      if (order) {
+        order.fullName = data.fullName;
+        order.phoneNumber = data.phoneNumber;
+        await order.save();
+      }
       if (data.orderStatus) {
         let preStatus = order.resStatus;
         order.resStatus = data.orderStatus;
@@ -696,10 +586,6 @@ const checkoutOrder = (data) => {
 
 module.exports = {
   getAllOrders,
-  registerOrder,
-  editOrder,
-  cancelOrder,
-  chooseTable,
   getAllOrdersByRestaurantId,
   updateStatusOrder,
   getAllOrdersByCustomerPhoneNumber,

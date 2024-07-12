@@ -1,4 +1,9 @@
-import { loginWithEmail, registerWithEmail, updateInfo, changePass } from "@/services/auth";
+import {
+  loginWithEmail,
+  registerWithEmail,
+  updateInfo,
+  changePass,
+} from "@/services/auth";
 
 const useAuth = () => {
   const login = async (body: any) => {
@@ -14,7 +19,7 @@ const useAuth = () => {
 
   const changePassword = async (body: any) => {
     return await changePass(body);
-  }
+  };
 
   return { login, register, update, changePassword };
 };

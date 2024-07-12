@@ -21,6 +21,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
+import { Add, Cancel, Close, Edit, Save } from "@mui/icons-material";
 
 const CreateTable = () => {
   const [name, setName] = useState<string>("");
@@ -56,7 +57,6 @@ const CreateTable = () => {
   type Table = {
     id: number;
     name: string;
-    status: string;
     capacity: number;
     restaurantId: number;
     position: string;
@@ -76,7 +76,6 @@ const CreateTable = () => {
       tmp.push({
         id: table.id,
         name: table.name,
-        status: table.isOccupied,
         capacity: table.capacity,
         restaurantId: table.restaurantId,
         position: table.position,
@@ -307,32 +306,52 @@ const CreateTable = () => {
           position: "absolute",
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "50%",
-          height: "80%",
+          transform: "translate(-39%, -44%)",
+          width: "83%",
+          height: "91%",
           bgcolor: "background.paper",
-          boxShadow: 24,
           p: 4,
         }}
       >
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
+            //flexDirection: "row",
+            //justifyContent: "flex-start",
             alignItems: "center",
           }}
         >
-          <Typography
+          <Box
             sx={{
-              fontSize: "1.8em",
-              fontWeight: "bold",
-              marginBottom: "20px",
-              color: "#AE0001",
+              marginBottom: "30px",
             }}
           >
-            Tables
-          </Typography>
+            <Typography variant="h4">Table Management</Typography>
+          </Box>
+          <Box flexGrow={1} />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenModalCreate(true)}
+            startIcon={<Add />}
+          >
+            Add
+          </Button>
+          {/* <Button
+          variant="contained"
+          fullWidth
+          onClick={() => setOpenModalCreate(true)}
+          sx={{
+            backgroundColor: "#AE0001",
+            color: "#fff",
+            position: "absolute",
+            bottom: "5%",
+            right: "5%",
+            width: "20%",
+          }}
+        >
+          Create new table
+        </Button> */}
         </Box>
         <Grid container spacing={2} alignItems={"center"}>
           <Grid item xs={3}>
@@ -441,22 +460,6 @@ const CreateTable = () => {
             )}
           </Grid>
         </Box>
-
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={() => setOpenModalCreate(true)}
-          sx={{
-            backgroundColor: "#AE0001",
-            color: "#fff",
-            position: "absolute",
-            bottom: "5%",
-            right: "5%",
-            width: "20%",
-          }}
-        >
-          Create new table
-        </Button>
       </Box>
       <Modal open={openModalCreate} onClose={() => setOpenModalCreate(false)}>
         <Box
@@ -467,7 +470,7 @@ const CreateTable = () => {
             transform: "translate(-50%, -50%)",
             padding: "20px",
             width: "60%",
-            height: "60%",
+            height: "65%",
             backgroundColor: "#fff",
             borderRadius: "10px",
           }}
@@ -560,23 +563,44 @@ const CreateTable = () => {
                 <MenuItem value={"OUT DOOR"}>OUT DOOR</MenuItem>
               </Select>
             </Grid>
+            <Grid
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                onClick={handleCreateTable}
+                variant="contained"
+                sx={{ width: 200, height: 50, marginTop: 5 }}
+                type="submit"
+              >
+                Create Restaurant
+              </Button>
+            </Grid>
           </Grid>
 
-          <Button
+          {/* <Button
             variant="contained"
             fullWidth
             onClick={handleCreateTable}
             sx={{
-              backgroundColor: "#AE0001",
+              backgroundColor: "##5D87FF",
               color: "#fff",
               position: "absolute",
               bottom: "5%",
               right: "5%",
               width: "20%",
+              textAlign: "center",
             }}
           >
             Create new table
-          </Button>
+          </Button> */}
         </Box>
       </Modal>
       <LoadingModal open={loading} />

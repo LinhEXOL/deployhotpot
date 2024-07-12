@@ -77,7 +77,7 @@ const ChangePass = () => {
               xs: "80%",
               md: "50%",
             },
-            bgcolor: "#fff"
+            bgcolor: "#fff",
           }}
         >
           <Box

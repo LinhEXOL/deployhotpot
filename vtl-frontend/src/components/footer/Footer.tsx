@@ -73,8 +73,8 @@ const Footer = () => {
       <Box
         id="footer"
         sx={{
-          paddingLeft: "80px",
-          paddingRight: "80px",
+          paddingLeft: "140px",
+          paddingRight: "110px",
           paddingTop: "40px",
           height: "100%", // Add a box shadow
           width: "100%",

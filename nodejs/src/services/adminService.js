@@ -3,7 +3,7 @@ import db from "../models/index";
 const getAllStaff = () => {
   return new Promise(async (resolve, reject) => {
     try {
-        let data = [];
+      let data = [];
       let staff = await db.User.findAll({
         where: { roleId: 2 },
         raw: true,
@@ -14,7 +14,6 @@ const getAllStaff = () => {
           "address",
           "phoneNumber",
           "image",
-          "type_register",
           "createdAt",
           "updatedAt",
         ],
@@ -40,8 +39,6 @@ const getAllStaff = () => {
     }
   });
 };
-
-
 
 module.exports = {
   getAllStaff,

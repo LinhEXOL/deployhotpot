@@ -26,16 +26,12 @@ const UpdateDishComponent = () => {
     null
   );
   const [dishName, setDishName] = React.useState<string>(dish.name);
-  const [dishCategory, setDishCategory] = React.useState<string>(
-    dish.category
-  );
+  const [dishCategory, setDishCategory] = React.useState<string>(dish.category);
   const [dishPrice, setDishPrice] = React.useState<number>(dish.price);
-    const [dishDescription, setDishDescription] = React.useState<string>(
-        dish.description
-    );
-  const [previewUrl, setPreviewUrl] = React.useState<string | null>(
-    dish.image
+  const [dishDescription, setDishDescription] = React.useState<string>(
+    dish.description
   );
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(dish.image);
   const [open, setOpen] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isDisable, setIsDisable] = React.useState<boolean>(true);
@@ -73,29 +69,30 @@ const UpdateDishComponent = () => {
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDishName(event.target.value);
   };
-  const handleChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeDescription = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setDishDescription(event.target.value);
   };
-    const handleChangeCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDishCategory(event.target.value);
-    };
+  const handleChangeCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDishCategory(event.target.value);
+  };
 
-    const handleChangePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDishPrice(Number(event.target.value));
-    }
+  const handleChangePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDishPrice(Number(event.target.value));
+  };
 
   React.useEffect(() => {
     setIsDisable(true);
     if (
-      (dishName !== dish.name ||
+      ((dishName !== dish.name ||
         dishCategory !== dish.category ||
         dishPrice !== dish.price ||
-        dishDescription !== dish.description
-        ) &&
-      dishName &&
-      dishCategory &&
-      dishDescription &&
-      dishPrice ||
+        dishDescription !== dish.description) &&
+        dishName &&
+        dishCategory &&
+        dishDescription &&
+        dishPrice) ||
       selectFile
     ) {
       setIsDisable(false);
@@ -126,7 +123,7 @@ const UpdateDishComponent = () => {
             </Grid>
             <Grid xs={8} sm={8} md={8} lg={8}>
               <TextField
-                placeholder="Dish&apos;s Name"
+                placeholder="Dish's Name"
                 variant="outlined"
                 fullWidth
                 required
@@ -194,7 +191,7 @@ const UpdateDishComponent = () => {
                 onChange={handleChangeDescription}
               />
             </Grid>
-            
+
             <Grid
               xs={4}
               sm={4}

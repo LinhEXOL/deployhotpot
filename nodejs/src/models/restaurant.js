@@ -9,12 +9,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Restaurant.belongsTo(models.Allcode, {
-        foreignKey: "provinceId",
-        targetKey: "keyMap",
-        as: "provinceData",
-      });
-      Restaurant.hasOne(models.Markdown, { foreignKey: "restaurantId" });
       Restaurant.hasMany(models.Table, {
         onUpdate: "cascade",
         hooks: true,
@@ -37,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       image: {
         type: DataTypes.BLOB("long"),
       },
-      provinceId: {
+      province: {
         type: DataTypes.STRING,
       },
       address: {
@@ -48,15 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       latitude: {
         type: DataTypes.DOUBLE,
-      },
-      isOpen: {
-        type: DataTypes.INTEGER,
-      },
-      rate: {
-        type: DataTypes.DOUBLE,
-      },
-      isDelete: {
-        type: DataTypes.INTEGER,
       },
     },
     {

@@ -111,6 +111,34 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
           </Link>
 
           <Box flexGrow={0.1} />
+
+          {router.pathname === "/" && (
+            <>
+              <Typography
+                variant="h6"
+                noWrap
+                onClick={() => handleScroll("intro")}
+                sx={{
+                  mr: 5,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  // letterSpacing: ".1rem",
+                  color: "#fff",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  transition: "color 0.3s ease",
+                  ":hover": {
+                    transform: "scale(1.1)",
+                  },
+                }}
+              >
+                About Us
+              </Typography>
+              <Box flexGrow={0.1} />
+            </>
+          )}
+
           {router.pathname === "/" && (
             <>
               <Typography
@@ -188,7 +216,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
                   },
                 }}
               >
-                About Us
+                Contact
               </Typography>
               <Box flexGrow={0.1} />
             </>
@@ -218,7 +246,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
             </>
           )} */}
           <Box flexGrow={1} />
-          { router.pathname === "/" &&
+          {(router.pathname === "/" || router.pathname === "/menu") && (
             <>
               <Stack spacing={1} direction="row" alignItems="center">
                 <Button
@@ -245,7 +273,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
               </Stack>
               <Box flexGrow={0.1} />
             </>
-          }
+          )}
 
           <Stack spacing={1} direction="row" alignItems="center">
             {/* <Button
@@ -261,40 +289,42 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
               <Profile />
             ) : (
               <>
-                <Box
-                  sx={{
-                    display: { xs: "none", md: "flex" },
-                    flexDirection: "row",
-                    ":hover": {
-                      transform: "scale(1.1)",
-                    },
-                  }}
-                >
-                  <IconUser width="20" height="20" color="white" />
-                  <Link href="/auth/login" style={{ textDecoration: "none" }}>
-                    <Typography
-                      variant="h6"
-                      noWrap
-                      sx={{
-                        mr: 5,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "monospace",
-                        fontWeight: 700,
-                        // letterSpacing: ".1rem",
-                        color: "#fff",
-                        textDecoration: "none",
-                        cursor: "pointer",
-                        transition: "color 0.3s ease",
-                        ":hover": {
-                          transform: "scale(1.1)",
-                        },
-                        ml: 1,
-                      }}
-                    >
-                      Sign In
-                    </Typography>
-                  </Link>
-                </Box>
+                {router.pathname !== "/auth/login" && (
+                  <Box
+                    sx={{
+                      display: { xs: "none", md: "flex" },
+                      flexDirection: "row",
+                      ":hover": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  >
+                    <IconUser width="20" height="20" color="white" />
+                    <Link href="/auth/login" style={{ textDecoration: "none" }}>
+                      <Typography
+                        variant="h6"
+                        noWrap
+                        sx={{
+                          mr: 5,
+                          display: { xs: "none", md: "flex" },
+                          fontFamily: "monospace",
+                          fontWeight: 700,
+                          // letterSpacing: ".1rem",
+                          color: "#fff",
+                          textDecoration: "none",
+                          cursor: "pointer",
+                          transition: "color 0.3s ease",
+                          ":hover": {
+                            transform: "scale(1.1)",
+                          },
+                          ml: 1,
+                        }}
+                      >
+                        Sign In
+                      </Typography>
+                    </Link>
+                  </Box>
+                )}
               </>
             )}
           </Stack>

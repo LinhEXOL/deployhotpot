@@ -9,7 +9,6 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Image from "next/legacy/image";
 import { formatCurrencyVND } from "@/utils";
 
-
 type Category = {
   id: number;
   name: string;
@@ -248,9 +247,9 @@ const MenuComp = () => {
                           <Typography variant="body1">
                             <strong>{dish.name}</strong>
                           </Typography>
-                          <Typography variant="body2">
+                          {/* <Typography variant="body2">
                             {dish.description}
-                          </Typography>
+                          </Typography> */}
                           <Typography
                             variant="body1"
                             sx={{

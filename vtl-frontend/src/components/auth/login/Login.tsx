@@ -185,10 +185,13 @@ const LoginComponent = ({ isAdmin }: { isAdmin: boolean }) => {
               >
                 Sign in
               </Button>
-              <Typography variant="body2" align="center">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/register">Sign up</Link>
-              </Typography>
+              {router.pathname !== "/admin/login" &&
+                router.pathname !== "/staff/login" && (
+                  <Typography variant="body2" align="center">
+                    Don&apos;t have an account?{" "}
+                    <Link href="/auth/register">Sign up</Link>
+                  </Typography>
+                )}
             </Stack>
           </Card>
         </Grid>

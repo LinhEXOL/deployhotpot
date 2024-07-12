@@ -56,12 +56,11 @@ const RegisterComponent = () => {
       address: address,
     };
     const response = await register(body);
-    console.log("RESPONSE", response)
-    if(response.status === 201){
-      window.location.href = "/auth/login"
+    console.log("RESPONSE", response);
+    if (response.status === 201) {
+      window.location.href = "/auth/login";
       console.log("Register success");
-    }
-    else{
+    } else {
       console.log("Register failed");
     }
   };

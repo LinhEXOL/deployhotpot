@@ -211,7 +211,6 @@ const ListOrder = () => {
                 backgroundColor: "red", // Directly set the indicator color to red
               },
             }}
-            
           >
             {tabs.map((tab, index) => (
               <Tab

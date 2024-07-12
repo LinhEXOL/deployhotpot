@@ -8,20 +8,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      User.belongsTo(models.Allcode, {
-        foreignKey: "roleId",
-        targetKey: "keyMap",
-        as: "roleData",
-      });
-      // User.hasMany(models.Order, {
-      //   foreignKey: "customerId",
-      //   as: "customerData",
-      // });
-      // User.belongsTo(models.StaffRestaurantMap, {
-      //   foreignKey: "id",
-      //   targetKey: "staffId",
-      // });
       User.hasMany(models.StaffRestaurantMap, { foreignKey: "id" });
     }
   }
@@ -34,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       phoneNumber: DataTypes.STRING,
       image: DataTypes.BLOB("long"),
       roleId: DataTypes.INTEGER,
-      type_register: DataTypes.INTEGER,
     },
     {
       sequelize,

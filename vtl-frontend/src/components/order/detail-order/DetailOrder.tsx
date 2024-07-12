@@ -107,7 +107,7 @@ type ResInfo = {
 const DetailOrderComponent = () => {
   const router = useRouter();
   const [orderId, setOrderId] = useState(router.query.orderId);
-  const {id} = useAppSelector((state) => state.profile);
+  const { id } = useAppSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
   const { order, orderItems, tables } = useAppSelector((state) => state.cart);
   const [orderDetail, setOrderDetail] = useState<Order | null>();
@@ -337,7 +337,7 @@ const DetailOrderComponent = () => {
         lat: response.data.latitude,
         lng: response.data.longitude,
       },
-      province: response.data.provinceId,
+      province: response.data.province,
       address: response.data.address,
     };
     setRestaurant(restaurant);
@@ -985,11 +985,10 @@ const DetailOrderComponent = () => {
                     if (
                       orderDetail?.order.resStatus === "pending" &&
                       orderDetail?.orderItems.length !== 0
-                    ){
+                    ) {
                       dispatch(clearOrder());
                       router.replace("/");
-                    }
-                    else handleUpdateStatus("cancel");
+                    } else handleUpdateStatus("cancel");
                   }}
                 >
                   Cancel

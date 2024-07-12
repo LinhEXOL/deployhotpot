@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
+  FormControl,
   Typography,
   Tab,
   Tabs,
@@ -16,7 +17,9 @@ import {
   DialogActions,
   Checkbox,
   Card,
+  InputLabel,
 } from "@mui/material";
+import { formatCurrencyVND } from "@/utils";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import { useEffect, useState } from "react";
 import Image from "next/legacy/image";
@@ -40,7 +43,6 @@ type Table = {
   id: string;
   name: string;
   numPerson: number;
-  status: boolean;
 };
 const CreateOrder = () => {
   const { successNotify, errorNotify } = useNotify();
@@ -123,7 +125,6 @@ const CreateOrder = () => {
           id: table.id,
           name: table.name,
           numPerson: table.capacity,
-          status: table.isOccupied,
         })
       );
       setTables(tmp);
@@ -188,7 +189,7 @@ const CreateOrder = () => {
     };
     console.log("🚀 ~ handleBooking ~ body:", body);
     const response = await createNewOrder(body);
-    console.log("🚀 ~ handleBooking ~ response:", response)
+    console.log("🚀 ~ handleBooking ~ response:", response);
     if (response.status !== 201) {
       // Handle error
       errorNotify(response.message);
@@ -204,7 +205,7 @@ const CreateOrder = () => {
     setIsChecked(dishes.map(() => false));
     setSelectedDishes([]);
     let tmp = dishes;
-    isChecked.forEach((value,index) => tmp[index].isSelect = value);
+    isChecked.forEach((value, index) => (tmp[index].isSelect = value));
     setDishes(tmp);
     setOpenModal(false);
   };
@@ -291,18 +292,23 @@ const CreateOrder = () => {
             />
           </Grid>
           <Grid xs={2} sm={4} md={4}>
-            <Select
-              value={numPerson.toString()}
-              onChange={(event) => {
-                setNumPerson(parseInt(event.target.value));
-              }}
-              fullWidth
-            >
-              <MenuItem value={"2"}>2 people</MenuItem>
-              <MenuItem value={"4"}>4 people</MenuItem>
-              <MenuItem value={"6"}>6 people</MenuItem>
-              <MenuItem value={"8"}>8 people</MenuItem>
-            </Select>
+            <FormControl fullWidth>
+              <InputLabel id="table-type-label">Choose table type</InputLabel>
+              <Select
+                labelId="table-type-label"
+                value={numPerson.toString()}
+                onChange={(event) => {
+                  setNumPerson(parseInt(event.target.value));
+                }}
+                fullWidth
+                label="Choose table type"
+              >
+                <MenuItem value={"2"}>2 people</MenuItem>
+                <MenuItem value={"4"}>4 people</MenuItem>
+                <MenuItem value={"6"}>6 people</MenuItem>
+                <MenuItem value={"8"}>8 people</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
           <Grid xs={12} sm={12} md={12}>
@@ -316,7 +322,7 @@ const CreateOrder = () => {
             </Typography>
           </Grid>
           {tables.map((table, index) =>
-            numPerson === table.numPerson && table.status == false ? (
+            numPerson === table.numPerson ? (
               <Grid key={index} xs={2} sm={3} md={3}>
                 <Button
                   onClick={() => {
@@ -366,12 +372,10 @@ const CreateOrder = () => {
                   fontSize: "1.0em",
                   fontWeight: "bold",
                   marginBottom: "20px",
-                  backgroundColor: "#E6AC0D",
-                  ":hover": {
-                    backgroundColor: "#AE0001",
-                  },
+                  backgroundColor: "#5D87FF",
+
                   textAlign: "center",
-                  width: "200px",
+                  width: "150px",
                   height: "30px",
                 }}
                 onClick={() => {
@@ -395,10 +399,8 @@ const CreateOrder = () => {
                   fontSize: "1.0em",
                   fontWeight: "bold",
                   marginBottom: "20px",
-                  backgroundColor: "#E6AC0D",
-                  ":hover": {
-                    backgroundColor: "#AE0001",
-                  },
+                  backgroundColor: "#5D87FF",
+
                   textAlign: "center",
                   width: "200px",
                   height: "30px",
@@ -441,7 +443,7 @@ const CreateOrder = () => {
                           fontWeight: "bold",
                         }}
                       >
-                        {dish.price} $
+                        {formatCurrencyVND(dish.price)}
                       </Typography>
                     </Grid>
                   </>
@@ -480,19 +482,17 @@ const CreateOrder = () => {
               fontSize: "1.0em",
               fontWeight: "bold",
               marginBottom: "20px",
-              backgroundColor: "#E6AC0D",
-              ":hover": {
-                backgroundColor: "#AE0001",
-              },
+              backgroundColor: "#5D87FF",
+
               textAlign: "center",
-              width: "200px",
+              width: "150px",
               height: "50px",
             }}
             onClick={() => {
               handleBooking();
             }}
           >
-            Reserve now
+            Create order
           </Button>
         </Box>
       </Box>
@@ -586,13 +586,13 @@ const CreateOrder = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {dish.price} VND
+                      {formatCurrencyVND(dish.price)}
                     </Typography>
                   </Grid>
                   <Grid key={index} xs={2} sm={2} md={2}>
                     <TextField
                       id="standard-basic"
-                      label="Số lượng"
+                      label="Qty"
                       variant="outlined"
                       value={quantity[index]}
                       onChange={(event) => {
@@ -632,13 +632,9 @@ const CreateOrder = () => {
                 fontSize: "1.0em",
                 fontWeight: "bold",
                 marginBottom: "10px",
-                backgroundColor: "#E6AC0D",
-                ":hover": {
-                  backgroundColor: "#AE0001",
-                },
+                backgroundColor: "#5D87FF",
+
                 textAlign: "center",
-                width: "200px",
-                height: "50px",
               }}
               onClick={handleCloseMenu}
             >

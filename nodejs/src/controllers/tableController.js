@@ -1,8 +1,6 @@
 import { Model } from "sequelize";
 import tableService from "../services/tableService";
-// const tableDAO = require("../DAOs/tableDAO");
-const orderDAO = require("../DAOs/orderDAO");
-const tableDAO = require("../DAOs/tableDao");
+
 let handleGetAllTables = async (req, res) => {
   let data = await tableService.getAllTables();
 

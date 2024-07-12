@@ -616,9 +616,9 @@ const DetailOrderComponent = () => {
                       }}
                     >
                       {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(dish.price || 0)}
+                        style: "currency",
+                        currency: "VND",
+                      }).format(dish.price || 0)}
                     </Typography>
                   </Grid>
                   <Grid key={index} xs={2} sm={2} md={2}>
@@ -676,7 +676,7 @@ const DetailOrderComponent = () => {
                 setChooseDish(false);
               }}
             >
-              Xác nhận
+              Confirm
             </Button>
           </Box>
         </Box>

@@ -8,8 +8,9 @@ let handleGetAllCategories = async (req, res) => {
   });
 };
 
-let handleCreateNewCategory = async (req, res) => {
+let handleCreateNewCategory = async (req, res, io) => {
   let data = await categoryService.createNewCategory(req.body);
+  if (data.status === 201) io.emit("update-category", "success");
   return res.json(data);
 };
 
@@ -22,16 +23,16 @@ let handleDeleteCategory = async (req, res, io) => {
     });
   }
   let data = await categoryService.deleteCategory(req.body.id);
-  if(data.status === 200){
-    io.sockets.emit("update-data", "success");
+  if (data.status === 200) {
+    io.sockets.emit("update-category", "success");
   }
   return res.json(data);
 };
 
 let handleEditCategory = async (req, res, io) => {
   let data = await categoryService.updateCategoryData(req.body);
-  if(data.status === 200){
-    io.sockets.emit("update-data", "success");
+  if (data.status === 200) {
+    io.sockets.emit("update-category", "success");
   }
   return res.json(data);
 };

@@ -179,7 +179,6 @@ type Table = {
   id: string;
   name: string;
   numPerson: number;
-  status: boolean;
 };
 
 const DetailRestaurant = () => {
@@ -329,7 +328,7 @@ const DetailRestaurant = () => {
           lat: response.data.latitude,
           lng: response.data.longitude,
         },
-        province: response.data.provinceId,
+        province: response.data.province,
         address: response.data.address,
       };
       setRestaurant(restaurant);
@@ -387,7 +386,6 @@ const DetailRestaurant = () => {
           id: table.id,
           name: table.name,
           numPerson: table.capacity,
-          status: table.isOccupied,
         })
       );
       setTables(tmp);

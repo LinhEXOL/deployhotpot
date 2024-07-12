@@ -3,6 +3,7 @@ import * as tableService from "@/services/table";
 import * as dishService from "@/services/dish";
 import restaurantService from "@/services/restaurant";
 import * as categoryService from "@/services/category";
+import * as orderService from "@/services/order";
 const useAdmin = () => {
   const createStaff = async (body: any) => {
     return await staffService.createNewStaff(body);
@@ -90,19 +91,23 @@ const useAdmin = () => {
 
   const createNewCategory = async (body: any) => {
     return await categoryService.createNewCategory(body);
-  }
+  };
 
   const getAllCategories = async () => {
     return await categoryService.getAllCategories();
-  }
+  };
 
   const updateCategory = async (body: any) => {
     return await categoryService.updateCategory(body);
-  }
+  };
 
   const deleteCategory = async (body: any) => {
     return await categoryService.deleteCategory(body);
-  }
+  };
+
+  const getAllOrders = async () => {
+    return await orderService.getAllOrders();
+  };
 
   return {
     createStaff,
@@ -129,7 +134,8 @@ const useAdmin = () => {
     createNewCategory,
     getAllCategories,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getAllOrders,
   };
 };
 

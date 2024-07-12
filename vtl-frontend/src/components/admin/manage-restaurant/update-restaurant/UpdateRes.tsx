@@ -108,14 +108,12 @@ const UpdateRes = ({ restaurant, onClose }: UpdateResProps) => {
   };
 
   const handleUpdate = async () => {
-    const base64 = selectFile
-      ? await toBase64(selectFile as File)
-      : null;
+    const base64 = selectFile ? await toBase64(selectFile as File) : null;
     let body = {
       id: restaurant.id,
       name: resName,
       address: resAddress,
-      provinceId: resProvince,
+      province: resProvince,
       latitude: latitude,
       longitude: longitude,
       image: base64,

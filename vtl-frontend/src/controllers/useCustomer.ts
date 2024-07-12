@@ -60,6 +60,11 @@ const useCustomer = () => {
   const getOrdersByCustomerId = async (body: any) => {
     return await orderService.getOrdersByCustomerId(body);
   };
+
+  const getAllOrders = async () => {
+    return await orderService.getAllOrders();
+  };
+
   const getAllCategories = async () => {
     return await categoryService.getAllCategories();
   };
@@ -78,6 +83,7 @@ const useCustomer = () => {
     payDeposit,
     updateOrder,
     getOrdersByCustomerId,
+    getAllOrders,
     getAllCategories,
   };
 };

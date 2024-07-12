@@ -110,14 +110,15 @@ const Intro = () => {
   };
   return (
     <Box
+      id="intro"
       sx={{
-       bgcolor: "transparent",
+        bgcolor: "transparent",
         // borderRadius: "8px",
         padding: "16px",
       }}
     >
       <Grid container spacing={0}>
-        <Grid item xs={12} md={8} p={5}>
+        <Grid item xs={12} md={8} sx={{ p: "40px 80px 40px 120px" }}>
           <Image
             src={"/images/restaurants/res-1.jpg"}
             alt="restaurant"
@@ -152,16 +153,21 @@ const Intro = () => {
                   backgroundColor: "#fff",
                   padding: "20px",
                   borderRadius: "8px",
+                  margin: "10px",
                 }}
               >
                 <Typography variant="h4" gutterBottom>
-                  Welcome to the best restaurant
+                  Welcome to Lee Hotpot
                 </Typography>
-                <Typography variant="body1" paragraph>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                  aliquam, urna in faucibus bibendum, justo quam ultrices odio,
-                  nec dictum justo dui eu orci. Nulla facilisi. Nulla facilisi.
-                  Nulla facilisi.
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{ textAlign: "justify" }}
+                >
+                  With a mission to honor traditional flavors and endless
+                  creativity, Lee Hotpot harmoniously blends rich hotpot tastes
+                  with elegant surroundings, providing customers with stylish
+                  and refined feasts.
                 </Typography>
               </Box>
               <Link
@@ -170,9 +176,10 @@ const Intro = () => {
                   textDecoration: "none",
                   display: "block",
                   marginTop: "16px",
+                  marginLeft: "10px",
                   width: "40%",
                   padding: "8px 16px",
-                  backgroundColor: "#f50057",
+                  backgroundColor: "#CB2128",
                   color: "#fff",
                   borderRadius: "8px",
                   textAlign: "center",

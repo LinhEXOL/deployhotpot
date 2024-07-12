@@ -62,7 +62,7 @@ const handleUpdateTable = async (req, res, io) => {
       data: "",
     });
   }
-}
+};
 
 module.exports = {
   handleGetListCustomerForStaff,

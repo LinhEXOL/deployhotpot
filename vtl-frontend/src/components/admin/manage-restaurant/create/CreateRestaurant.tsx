@@ -155,7 +155,7 @@ const CreateRestaurant = ({ onClose }: CreateRestaurantProps) => {
       let image = await helper.toBase64(selectFile!);
       const body = {
         name: resName,
-        provinceId: province,
+        province: province,
         address: resAddress,
         latitude: latitude,
         longitude: longitude,
@@ -176,8 +176,29 @@ const CreateRestaurant = ({ onClose }: CreateRestaurantProps) => {
   return (
     <Box display={"flex"} justifyContent={"center"}>
       <>
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           <>
+            <Grid
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: "10px",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                }}
+              >
+                Create Restaurant
+              </Typography>
+            </Grid>
             <Grid
               xs={4}
               sm={4}

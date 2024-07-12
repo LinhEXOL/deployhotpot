@@ -84,40 +84,45 @@ const Header = () => {
               <Profile />
             ) : (
               <>
-                <Box
-                  sx={{
-                    display: { xs: "none", md: "flex" },
-                    flexDirection: "row",
-                    ":hover": {
-                      transform: "scale(1.1)",
-                    },
-                  }}
-                >
-                  <IconUser width="20" height="20" color="white" />
-                  <Link href="/admin/login" style={{ textDecoration: "none" }}>
-                    <Typography
-                      variant="h6"
-                      noWrap
-                      sx={{
-                        mr: 5,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "monospace",
-                        fontWeight: 700,
-                        // letterSpacing: ".1rem",
-                        color: "#fff",
-                        textDecoration: "none",
-                        cursor: "pointer",
-                        transition: "color 0.3s ease",
-                        ":hover": {
-                          transform: "scale(1.1)",
-                        },
-                        ml: 1,
-                      }}
+                {router.pathname !== "/admin/login" && (
+                  <Box
+                    sx={{
+                      display: { xs: "none", md: "flex" },
+                      flexDirection: "row",
+                      ":hover": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  >
+                    <IconUser width="20" height="20" color="white" />
+                    <Link
+                      href="/admin/login"
+                      style={{ textDecoration: "none" }}
                     >
-                      Sign In
-                    </Typography>
-                  </Link>
-                </Box>
+                      <Typography
+                        variant="h6"
+                        noWrap
+                        sx={{
+                          mr: 5,
+                          display: { xs: "none", md: "flex" },
+                          fontFamily: "monospace",
+                          fontWeight: 700,
+                          // letterSpacing: ".1rem",
+                          color: "#fff",
+                          textDecoration: "none",
+                          cursor: "pointer",
+                          transition: "color 0.3s ease",
+                          ":hover": {
+                            transform: "scale(1.1)",
+                          },
+                          ml: 1,
+                        }}
+                      >
+                        Sign In
+                      </Typography>
+                    </Link>
+                  </Box>
+                )}
               </>
             )}
           </Stack>

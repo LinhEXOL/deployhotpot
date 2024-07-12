@@ -1,12 +1,12 @@
 import {
-	IconAperture,
-	IconCopy,
-	IconLayoutDashboard,
-	IconLogin,
-	IconMoodHappy,
-	IconTypography,
-	IconUserPlus,
-	IconUser,
+  IconAperture,
+  IconCopy,
+  IconLayoutDashboard,
+  IconLogin,
+  IconMoodHappy,
+  IconTypography,
+  IconUserPlus,
+  IconUser,
 } from "@tabler/icons-react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import SourceIcon from "@mui/icons-material/Source";
@@ -34,13 +34,13 @@ const StaffMenuitems = [
   {
     id: uniqueId(),
     title: "Create Order",
-    icon: ListAltIcon,
+    icon: NoteAddIcon,
     href: "/staff/manage-order/create",
   },
   {
     id: uniqueId(),
     title: "Manage Order",
-    icon: SourceIcon,
+    icon: ListAltIcon,
     href: "/",
     nested: [
       {
@@ -58,36 +58,35 @@ const StaffMenuitems = [
         title: "All Orders",
         href: "/staff/manage-order/all-orders",
       },
-    ]
+    ],
   },
   {
     navlabel: true,
-    subheader: "Tables",
+    subheader: "Table",
   },
   {
     id: uniqueId(),
     title: "Manage Table",
-    icon: NoteAddIcon,
+    icon: ListAltIcon,
     href: "/staff/manage-table",
   },
-  
-  {
-    navlabel: true,
-    subheader: "Auth",
-  },
-  {
-    id: uniqueId(),
-    title: "Log out",
-    icon: IconLogin,
-    href: "/staff/login",
-  },
-  {
-    id: uniqueId(),
-    title: "Profile",
-    icon: IconUser,
-    href: "/profile",
-  },
+
+  // {
+  //   navlabel: true,
+  //   subheader: "Auth",
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: "Log out",
+  //   icon: IconLogin,
+  //   href: "/staff/login",
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: "Profile",
+  //   icon: IconUser,
+  //   href: "/profile",
+  // },
 ];
 
 export default StaffMenuitems;
-;

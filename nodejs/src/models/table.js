@@ -65,11 +65,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      isOccupied: {
-        allowNull: false,
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
       description: {
         type: DataTypes.TEXT,
       },

@@ -1,12 +1,12 @@
 import {
-	IconAperture,
-	IconCopy,
-	IconLayoutDashboard,
-	IconLogin,
-	IconMoodHappy,
-	IconTypography,
-	IconUserPlus,
-	IconUser,
+  IconAperture,
+  IconCopy,
+  IconLayoutDashboard,
+  IconLogin,
+  IconMoodHappy,
+  IconTypography,
+  IconUserPlus,
+  IconUser,
 } from "@tabler/icons-react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import SourceIcon from "@mui/icons-material/Source";
@@ -22,9 +22,20 @@ const Menuitems = [
 
   {
     id: uniqueId(),
-    title: "Home",
+    title: "Dashboard",
     icon: IconLayoutDashboard,
     href: "/admin",
+  },
+
+  {
+    navlabel: true,
+    subheader: "Restaurant",
+  },
+  {
+    id: uniqueId(),
+    title: "Manage Restaurant",
+    icon: ListAltIcon,
+    href: "/admin/manage-restaurant",
   },
   {
     navlabel: true,
@@ -38,38 +49,28 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: "Restaurant",
-  },
-  {
-    id: uniqueId(),
-    title: "Manage Restaurant",
-    icon: NoteAddIcon,
-    href: "/admin/manage-restaurant",
-  },
-  {
-    navlabel: true,
     subheader: "Category",
   },
+  // {
+  //   id: uniqueId(),
+  //   title: "Create Category",
+  //   icon: NoteAddIcon,
+  //   href: "/admin/manage-category/create",
+  // },
   {
     id: uniqueId(),
-    title: "Create Category",
-    icon: NoteAddIcon,
-    href: "/admin/manage-category/create",
-  },
-  {
-    id: uniqueId(),
-    title: "All Category",
-    icon: SourceIcon,
+    title: "Manage Category",
+    icon: ListAltIcon,
     href: "/admin/manage-category",
   },
   {
     navlabel: true,
-    subheader: "Dishes",
+    subheader: "Dish",
   },
   {
     id: uniqueId(),
     title: "Manage Dish",
-    icon: NoteAddIcon,
+    icon: ListAltIcon,
     href: "/admin/manage-dish",
   },
   // {
@@ -88,24 +89,23 @@ const Menuitems = [
   //   icon: SourceIcon,
   //   href: "/admin/manage-combo/create",
   // },
-  {
-    navlabel: true,
-    subheader: "Auth",
-  },
-  {
-    id: uniqueId(),
-    title: "Log out",
-    icon: IconLogin,
-    href: "/admin/login",
-  },
-  
-  {
-    id: uniqueId(),
-    title: "Profile",
-    icon: IconUser,
-    href: "/profile",
-  },
+  // {
+  //   navlabel: true,
+  //   subheader: "Auth",
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: "Log out",
+  //   icon: IconLogin,
+  //   href: "/admin/login",
+  // },
+
+  // {
+  //   id: uniqueId(),
+  //   title: "Profile",
+  //   icon: IconUser,
+  //   href: "/profile",
+  // },
 ];
 
 export default Menuitems;
-;
