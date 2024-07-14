@@ -5,7 +5,6 @@ import { ReactElement, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect } from "react";
 import Home from "@/components/admin/Admin";
-import Home1 from "@/components/admin/Admin1";
 import OrderItemsChart from "@/components/admin/dashboard/OrderItemsChart";
 import Dashboard from "@/components/admin/dashboard/Dashboard";
 import { fetchAllDishes } from "@/utils";

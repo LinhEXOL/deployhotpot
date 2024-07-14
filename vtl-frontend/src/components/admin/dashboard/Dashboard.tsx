@@ -161,10 +161,10 @@ const OrderItemsChart = () => {
           const dayIndex = itemDate.getDate() - 1; // Zero-based index
           if (item.resStatus === "done") {
             done[dayIndex]++;
+            revenue[dayIndex] += item.totalAmount; // Accumulate totalAmount for revenue
           } else if (item.resStatus === "cancel") {
             cancel[dayIndex]++;
           }
-          revenue[dayIndex] += item.totalAmount; // Accumulate totalAmount for revenue
         }
       });
 

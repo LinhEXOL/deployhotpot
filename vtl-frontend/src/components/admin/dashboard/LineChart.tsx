@@ -67,7 +67,7 @@ const LineChart: React.FC<LineChartProps> = ({
       },
       title: {
         display: true,
-        text: "Reservation Status Overview",
+        text: "Order Status",
         font: {
           size: 20, // Kích thước chữ
         },
