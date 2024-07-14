@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import profileSlice from "./profile/profileSlice";
 import cartSlice from "./cart/cartSlice";
+import lishDishesSlice from "./dishes/dishesSlice";
 export const store = configureStore({
   reducer: {
     profile: profileSlice,
     cart: cartSlice,
+    listDishes: lishDishesSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

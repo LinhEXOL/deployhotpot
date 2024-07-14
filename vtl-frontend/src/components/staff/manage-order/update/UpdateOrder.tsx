@@ -28,6 +28,7 @@ import LoadingModal from "@/common/loading/LoadingModal";
 import useStaff from "@/controllers/useStaff";
 import useNotify from "@/hooks/useNotify";
 import { socket } from "@/socket";
+import { formatCurrencyVND } from "@/utils";
 type OrderItem = {
   id: number;
   dishId: number;
@@ -103,6 +104,8 @@ const UpdateOrderComponent = () => {
   const { errorNotify, successNotify } = useNotify();
   const [numPerson, setNumPerson] = useState(2);
   const { orderId } = router.query;
+  const { listDishes } = useAppSelector((state) => state.listDishes);
+
   const handleClick = () => {
     setOpen(!open);
   };
@@ -124,8 +127,11 @@ const UpdateOrderComponent = () => {
     return tmp; // return the fetched order detail
   };
   const fetchDishes = async (orderDetail: any) => {
-    let tmp = await fetchAllDishes();
-    tmp!.sort((a: any, b: any) => a.id - b.id);
+    let tmp: Dish[] = [];
+    if (listDishes) {
+      tmp = listDishes;
+    }
+
     let isCheckedTmp: boolean[] = [];
     let quantityTmp: number[] = [];
     tmp!.forEach(() => {
@@ -133,27 +139,28 @@ const UpdateOrderComponent = () => {
       quantityTmp.push(1);
     });
     let orderItems = orderDetail?.orderItems;
+    let tmpCopy = [...tmp];
     orderItems?.forEach((orderItem: any) => {
       let index = tmp!.findIndex((dish) => dish.id === orderItem.dishId);
       console.log("🚀 ~ orderItems?.forEach ~ index:", index);
       if (index !== -1) {
         isCheckedTmp[index] = true;
         quantityTmp[index] = orderItem.quantity;
-        tmp![index].isSelect = true;
+        tmpCopy[index] = { ...tmpCopy[index], isSelect: true };
       }
     });
-    if (tmp) {
-      setDishes(tmp);
+    if (tmpCopy) {
+      setDishes(tmpCopy);
     }
     setIsChecked(isCheckedTmp);
     setQuantity(quantityTmp);
   };
   useEffect(() => {
-    setLoading(true);
     fetchOrder()
       .then((orderDetail) => fetchDishes(orderDetail))
       .then(() => setLoading(false));
   }, [orderId]);
+
   useEffect(() => {
     if (socket) {
       socket.on("update-order", (data) => {
@@ -247,7 +254,7 @@ const UpdateOrderComponent = () => {
     let tmp = [...isChecked];
     tmp[index] = value;
     let tmpDishes = [...dishes];
-    tmpDishes[index].isSelect = value;
+    tmpDishes[index] = { ...tmpDishes[index], isSelect: value };
     setDishes(tmpDishes);
     setIsChecked(tmp);
     setNewOrderItems((prev) => {
@@ -879,9 +886,8 @@ const UpdateOrderComponent = () => {
               width: "80%",
               height: "80%",
               bgcolor: "background.paper",
-              border: "2px solid #000",
-              boxShadow: 24,
               p: 4,
+              borderRadius: "10px",
             }}
           >
             <Box
@@ -900,7 +906,7 @@ const UpdateOrderComponent = () => {
                   color: "#AE0001",
                 }}
               >
-                Dishes
+                Choose dish
               </Typography>
             </Box>
             <Box padding={5}>
@@ -951,7 +957,7 @@ const UpdateOrderComponent = () => {
                             fontWeight: "bold",
                           }}
                         >
-                          {dish.price} $
+                          {formatCurrencyVND(dish.price)}
                         </Typography>
                       </Grid>
                       <Grid item xs={2} sm={2} md={2}>
@@ -1003,9 +1009,9 @@ const UpdateOrderComponent = () => {
               width: "50%",
               height: "80%",
               bgcolor: "background.paper",
-              border: "2px solid #000",
-              boxShadow: 24,
+              //boxShadow: 24,
               p: 4,
+              borderRadius: "10px",
             }}
           >
             <Box

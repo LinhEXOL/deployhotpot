@@ -167,7 +167,9 @@ const InvoiceModal = ({ orderId, open, handleClose }: InvoiceData) => {
       orderDetail?.order?.depositAmount !== undefined
     ) {
       setTotal(
-        orderDetail.order.totalAmount - orderDetail.order.depositAmount + 1000
+        ((orderDetail.order.totalAmount - orderDetail.order.depositAmount) /
+          100) *
+          110
       );
     }
   }, [orderDetail]); // Thêm phụ thuộc nếu cần

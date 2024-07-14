@@ -378,7 +378,7 @@ const DetailOrderComponent = () => {
       order: orderDetail!,
       type: "deposit",
     };
-    console.log("🚀 ~ handlePayDeposit ~ body.order:", body.order);
+    console.log("🚀 ~ handlePayDeposit ~ body.order:", body);
     const response = await payDeposit(body);
     console.log("🚀 ~ handlePayDeposit ~ response:", response);
     if (response.status !== 200) {

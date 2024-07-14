@@ -8,7 +8,7 @@ import { getAllCategories } from "../../services/category/index";
 import Grid from "@mui/material/Unstable_Grid2";
 import Image from "next/legacy/image";
 import { formatCurrencyVND } from "@/utils";
-
+import { useAppSelector } from "@/redux/hooks";
 type Category = {
   id: number;
   name: string;
@@ -31,7 +31,8 @@ const MenuComp = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const { getAllCategories, getAllDishes } = useCustomer();
   const [dishes, setDishes] = useState<Dish[]>([]);
-
+  const { listDishes } = useAppSelector((state) => state.listDishes);
+  console.log("🚀 ~ MenuComp ~ listDish:", listDishes[0]);
   useEffect(() => {
     const fetchCategories = async () => {
       const response = await getAllCategories();
@@ -70,7 +71,9 @@ const MenuComp = () => {
       });
       setDishes(tmp);
     };
-    fetchDishes();
+    if (listDishes) {
+      setDishes(listDishes);
+    } else fetchDishes();
   }, []);
 
   const sectionRefs = useRef<{

@@ -580,7 +580,7 @@ const CreateTable = () => {
                 sx={{ width: 200, height: 50, marginTop: 5 }}
                 type="submit"
               >
-                Create Restaurant
+                Create Table
               </Button>
             </Grid>
           </Grid>

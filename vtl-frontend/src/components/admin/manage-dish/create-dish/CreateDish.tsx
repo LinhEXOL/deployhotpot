@@ -16,6 +16,8 @@ import React from "react";
 import useAdmin from "@/controllers/useAdmin";
 import useHelper from "@/hooks/useHelper";
 import useNotify from "@/hooks/useNotify";
+import { insertDish } from "@/redux/dishes/dishesSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 type Category = {
   id: number;
   name: string;
@@ -23,8 +25,14 @@ type Category = {
 };
 interface CreateDishComponentProps {
   onClose: () => void;
+  dishes: any;
+  setDishes: (list: any) => void;
 }
-const CreateDishComponent = ({ onClose }: CreateDishComponentProps) => {
+const CreateDishComponent = ({
+  onClose,
+  dishes,
+  setDishes,
+}: CreateDishComponentProps) => {
   const [selectFile, setSelectFile] = React.useState<File | null>(null);
   const [longPressTimeout, setLongPressTimeout] = React.useState<number | null>(
     null
@@ -47,7 +55,7 @@ const CreateDishComponent = ({ onClose }: CreateDishComponentProps) => {
   const { createDish, getAllCategories } = useAdmin();
   const { toBase64 } = useHelper();
   const { successNotify, errorNotify } = useNotify();
-
+  const dispatch = useAppDispatch();
   React.useEffect(() => {
     const fetchCategories = async () => {
       const response = await getAllCategories();
@@ -142,13 +150,23 @@ const CreateDishComponent = ({ onClose }: CreateDishComponentProps) => {
       image: base64,
     };
     let response = await createDish(data);
-    // console.log("🚀 ~ handleSubmit ~ response:", response)
+    console.log("🚀 ~ handleSubmit ~ response:", response);
     if (response.status !== 201) {
       errorNotify(response.message);
       return;
     }
     onClose();
     successNotify("Create dish successfully");
+    if (response.data.image) {
+      const imageBuffer = response.data.image;
+      response.data.image = atob(Buffer.from(imageBuffer).toString("base64"));
+    } else {
+      response.data.image = "https://example.com";
+    }
+    console.log(" response.data.image", response.data.image);
+    dispatch(insertDish(response.data));
+    let tmp = [...dishes, response.data];
+    setDishes(tmp);
   };
 
   return (

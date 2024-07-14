@@ -28,6 +28,8 @@ import CreateDishComponent from "../create-dish/CreateDish";
 import useHelper from "@/hooks/useHelper";
 import useNotify from "@/hooks/useNotify";
 import Grid from "@mui/material/Unstable_Grid2";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { deleteDish, updateDish } from "@/redux/dishes/dishesSlice";
 
 type Category = {
   id: number;
@@ -41,7 +43,8 @@ type Dish = {
   price: number;
   description: string;
   image: string;
-  category: string;
+  category: number;
+  isSelect: boolean;
 };
 
 const ListDish = () => {
@@ -52,7 +55,8 @@ const ListDish = () => {
   const [confirmModal, setConfirmModal] = useState(false);
   const { getAllCategories, editDishById, deleteDishById } = useAdmin();
   const [dish, setDish] = useState<Dish>();
-
+  const { listDishes } = useAppSelector((state) => state.listDishes);
+  const dispatch = useAppDispatch();
   const { toBase64 } = useHelper();
   const { successNotify, errorNotify } = useNotify();
   const fetchDishes = async () => {
@@ -72,16 +76,18 @@ const ListDish = () => {
     fetchCategories().then(() => console.log(categories));
   }, []);
   useEffect(() => {
-    fetchDishes();
+    if (listDishes) {
+      setDishes(listDishes);
+    } else fetchDishes();
   }, []);
-  useEffect(() => {
-    socket.on("update-dish-list", (data) => {
-      if (data === "success") fetchDishes();
-    });
-    return () => {
-      socket.off("update-dish-list");
-    };
-  }, [socket]);
+  // useEffect(() => {
+  //   socket.on("update-dish-list", (data) => {
+  //     if (data === "success") fetchDishes();
+  //   });
+  //   return () => {
+  //     socket.off("update-dish-list");
+  //   };
+  // }, [socket]);
   const CreateModal = () => {
     return (
       <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
@@ -108,7 +114,11 @@ const ListDish = () => {
               Create Dish
             </Typography>
           </Box>
-          <CreateDishComponent onClose={() => setOpenCreateModal(false)} />
+          <CreateDishComponent
+            onClose={() => setOpenCreateModal(false)}
+            dishes={dishes}
+            setDishes={(list) => setDishes(list)}
+          />
         </Box>
       </Modal>
     );
@@ -117,9 +127,14 @@ const ListDish = () => {
   const ConfirmModal = () => {
     const handleDeleteDish = async () => {
       const response = await deleteDishById({ id: dish?.id });
+      console.log("RES DELETE", response);
       if (response.status === 200) {
         successNotify("Delete dish successfully");
         setConfirmModal(false);
+        dispatch(deleteDish(response.data));
+        let tmp = [...dishes];
+        tmp = tmp.filter((t) => dish?.id !== t.id);
+        setDishes(tmp);
       } else {
         errorNotify("Delete dish failed");
       }
@@ -239,7 +254,7 @@ const ListDish = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [dishName, setDishName] = useState<string>(dish?.name ?? "");
     const [nameError, setNameError] = useState<boolean>(false);
-    const [category, setCategory] = useState<string>(dish?.category ?? "-1");
+    const [category, setCategory] = useState<number>(dish?.category ?? -1);
     const [categoryError, setCategoryError] = useState<boolean>(false);
     const [price, setPrice] = useState<string>(dish?.price.toString() ?? "");
     const [priceError, setPriceError] = useState<boolean>(false);
@@ -261,7 +276,7 @@ const ListDish = () => {
     };
 
     const validateCategory = () => {
-      if (category === "-1") {
+      if (category === -1) {
         setCategoryError(true);
         setMessageError2("Category is required");
         return false;
@@ -333,9 +348,17 @@ const ListDish = () => {
         image: base64,
       };
       const response = await editDishById(data);
+      console.log("RES EDIT", response);
       if (response.status === 200) {
         successNotify("Edit dish successfully");
         setEditModal(false);
+        dispatch(updateDish(response.data));
+        let tmp = [...dishes];
+        const index = dishes.findIndex((dish) => response.data.id === dish.id);
+        if (index !== -1) {
+          tmp[index] = response.data;
+          setDishes(tmp);
+        }
       } else {
         errorNotify("Edit dish failed");
       }
@@ -439,7 +462,7 @@ const ListDish = () => {
                   <Select
                     variant="outlined"
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => setCategory(Number(e.target.value))}
                     error={categoryError}
                     fullWidth
                     required

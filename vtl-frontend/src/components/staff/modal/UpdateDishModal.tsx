@@ -10,6 +10,7 @@ import {
 import Grid from "@mui/material/Unstable_Grid2";
 import Image from "next/legacy/image";
 import { useState } from "react";
+import { formatCurrencyVND } from "@/utils";
 
 type UpdateDishModalProps = {
   openMenu: boolean;
@@ -142,7 +143,7 @@ const UpdateDishModal = ({
                       fontWeight: "bold",
                     }}
                   >
-                    {dish.price} $
+                    {formatCurrencyVND(dish.price)}
                   </Typography>
                 </Grid>
                 <Grid key={index} xs={2} sm={2} md={2}>

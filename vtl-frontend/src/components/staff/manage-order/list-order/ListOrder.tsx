@@ -13,44 +13,158 @@ const columns: GridColDef[] = [
     headerName: "ID",
     width: 30,
     renderCell: (params: GridRenderCellParams) => (
-      <Link
-        href={{
-          pathname: "/staff/manage-order/update",
-          query: { orderId: params.value },
-        }}
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        {params.value}
-      </Link>
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.value },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
     ),
   },
-  { field: "fullName", headerName: "Customer", width: 130 },
-  { field: "phoneNumber", headerName: "Phone", width: 120 },
-  { field: "resDate", headerName: "Reservation Date", width: 150 },
-  { field: "resTime", headerName: "Reservation Time", width: 150 },
-  { field: "people", headerName: "People", width: 60 },
+  {
+    field: "fullName",
+    headerName: "Customer",
+    width: 130,
+    renderCell: (params: GridRenderCellParams) => (
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
+    ),
+  },
+  {
+    field: "phoneNumber",
+    headerName: "Phone",
+    width: 120,
+    renderCell: (params: GridRenderCellParams) => (
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
+    ),
+  },
+  {
+    field: "resDate",
+    headerName: "Reservation Date",
+    width: 150,
+    renderCell: (params: GridRenderCellParams) => (
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
+    ),
+  },
+  {
+    field: "resTime",
+    headerName: "Reservation Time",
+    width: 150,
+    renderCell: (params: GridRenderCellParams) => (
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
+    ),
+  },
+  {
+    field: "people",
+    headerName: "People",
+    width: 60,
+    renderCell: (params: GridRenderCellParams) => (
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
+    ),
+  },
   {
     field: "resStatus",
     headerName: "Reservation Status",
     width: 150,
     renderCell: (params: GridRenderCellParams) => (
-      <Chip
-        label={params.value}
-        color={
-          params.value === "pending"
-            ? "primary"
-            : params.value === "confirmed"
-            ? "secondary"
-            : params.value === "seated"
-            ? "info"
-            : params.value === "done"
-            ? "success"
-            : "default"
-        }
-      />
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Chip
+            label={params.value}
+            color={
+              params.value === "pending"
+                ? "primary"
+                : params.value === "confirmed"
+                ? "secondary"
+                : params.value === "seated"
+                ? "info"
+                : params.value === "done"
+                ? "success"
+                : "default"
+            }
+          />
+        </Link>
+      </div>
     ),
   },
-  { field: "depositAmount", headerName: "Deposit Amount", width: 150 },
+  {
+    field: "depositAmount",
+    headerName: "Deposit Amount",
+    width: 150,
+    renderCell: (params: GridRenderCellParams) => (
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
+    ),
+  },
 ];
 
 type Order = {

@@ -76,6 +76,8 @@ const CreateOrder = () => {
   const [tables, setTables] = useState<Table[]>([]);
   const { getAllDishes, getAvailableTable, createNewOrder } = useStaff();
   const [quantity, setQuantity] = useState<number[]>(dishes.map(() => 1));
+  const { listDishes } = useAppSelector((state) => state.listDishes);
+
   useEffect(() => {
     const fetchDishes = async () => {
       const response = await getAllDishes();
@@ -106,7 +108,11 @@ const CreateOrder = () => {
       setDishes(tmp);
       setQuantity(tmp.map(() => 1));
     };
-    fetchDishes();
+    if (listDishes) {
+      setDishes(listDishes);
+      setQuantity(listDishes.map(() => 1));
+      setIsChecked(listDishes.map(() => false));
+    } else fetchDishes();
   }, []);
   useEffect(() => {
     const fetchAvailableTables = async () => {
@@ -145,9 +151,15 @@ const CreateOrder = () => {
       }
     });
   };
-  const handleSelected = () => {
+  const handleSelected = (list: any) => {
     setIsChecked([]);
-    setIsChecked(dishes.map((dish) => dish.isSelect));
+    if (!list) {
+      let tmp: boolean[] = [];
+      dishes.forEach(() => tmp.push(false));
+      setIsChecked(tmp);
+    } else {
+      setIsChecked(list.map((dish: any) => dish.isSelect));
+    }
   };
   const handleSetQuantity = (index: number, value: number) => {
     let tmp = [...quantity];
@@ -205,7 +217,11 @@ const CreateOrder = () => {
     setIsChecked(dishes.map(() => false));
     setSelectedDishes([]);
     let tmp = dishes;
-    isChecked.forEach((value, index) => (tmp[index].isSelect = value));
+    isChecked.forEach((value, index) => {
+      // Create a copy of the object at the specified index
+      tmp[index] = { ...tmp[index], isSelect: value };
+      // Update state with the new array
+    });
     setDishes(tmp);
     setOpenModal(false);
   };
@@ -608,8 +624,15 @@ const CreateOrder = () => {
                     <Checkbox
                       checked={isChecked[index]}
                       onChange={(event) => {
-                        dish.isSelect = event.target.checked;
-                        handleSelected();
+                        let tmp = [...dishes];
+                        // Create a copy of the object at the specified index
+                        tmp[index] = {
+                          ...tmp[index],
+                          isSelect: event.target.checked,
+                        };
+                        // Update state with the new array
+                        setDishes(tmp);
+                        handleSelected(tmp);
                       }}
                     />
                   </Grid>

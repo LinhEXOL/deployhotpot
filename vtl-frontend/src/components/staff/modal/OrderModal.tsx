@@ -22,6 +22,7 @@ import React from "react";
 import { fetchAllDishes, fetchOrderDetail, formatCurrencyVND } from "@/utils";
 import LoadingModal from "@/common/loading/LoadingModal";
 import InvoiceModal from "./InvoiceModal";
+import { useAppSelector } from "@/redux/hooks";
 
 type OrderModalProps = {
   orderId: number;
@@ -78,6 +79,7 @@ const OrderModal = ({ orderId, onClose, open }: OrderModalProps) => {
 
   const [isChecked, setIsChecked] = useState<boolean[]>([]);
   const [quantity, setQuantity] = useState<number[]>([]);
+  const { listDishes } = useAppSelector((state) => state.listDishes);
   useEffect(() => {
     setLoading(true);
     if (orderId == 0) {
@@ -96,7 +98,11 @@ const OrderModal = ({ orderId, onClose, open }: OrderModalProps) => {
         setDishes(tmp);
       }
     };
-    fetchDishes().then(() => {
+    let tmp: Dish[] = [];
+    if (listDishes) {
+      tmp = listDishes;
+      setDishes(tmp);
+
       setIsChecked(
         dishes.map((dish) => {
           return orderDetail?.orderItems.find((item) => {
@@ -114,7 +120,27 @@ const OrderModal = ({ orderId, onClose, open }: OrderModalProps) => {
           return item ? item.quantity : 1;
         })
       );
-    });
+    }
+
+    // fetchDishes().then(() => {
+    //   setIsChecked(
+    //     dishes.map((dish) => {
+    //       return orderDetail?.orderItems.find((item) => {
+    //         return item.dishId === dish.id;
+    //       })
+    //         ? true
+    //         : false;
+    //     })
+    //   );
+    //   setQuantity(
+    //     dishes.map((dish) => {
+    //       const item = orderDetail?.orderItems.find((item) => {
+    //         return item.dishId === dish.id;
+    //       });
+    //       return item ? item.quantity : 1;
+    //     })
+    //   );
+    // });
     fetchOrder();
   }, [orderId]);
 
