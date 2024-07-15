@@ -165,6 +165,24 @@ const columns: GridColDef[] = [
       </div>
     ),
   },
+  {
+    field: "totalAmount",
+    headerName: "Total Amount",
+    width: 150,
+    renderCell: (params: GridRenderCellParams) => (
+      <div style={{ cursor: "pointer" }}>
+        <Link
+          href={{
+            pathname: "/staff/manage-order/update",
+            query: { orderId: params.row.id },
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {params.value}
+        </Link>
+      </div>
+    ),
+  },
 ];
 
 type Order = {
@@ -176,6 +194,7 @@ type Order = {
   people: number;
   resStatus: string;
   depositAmount: number;
+  totalAmount: number;
 };
 const ListOrder = ({ filter }: { filter: string[] }) => {
   console.log("🚀 ~ ListOrder ~ filter:", filter);
@@ -200,6 +219,7 @@ const ListOrder = ({ filter }: { filter: string[] }) => {
         people: element.people,
         resStatus: element.resStatus,
         depositAmount: element.depositAmount,
+        totalAmount: element.totalAmount,
       });
     });
     setOrders(
